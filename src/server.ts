@@ -10,7 +10,6 @@ import categories_Router from "./Router/categories_Router";
 import bodyParser from "body-parser";
 import path from "path";
 import { v2 as cloudinary } from 'cloudinary';
-import { midlleware_file } from "./Services/sp";
 
 //ket noi csdl mongoDB
 mongoose

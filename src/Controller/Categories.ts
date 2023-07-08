@@ -71,9 +71,10 @@ async function loadCategories(req: Request, res: Response) {
 //TẤT CẢ DANH MỤC
 async function loadAllCategories(req: Request, res: Response) {
     try {
+        //load name
         const allCategories = await CategoriesModel.find({}, 'name');
-        //    const categoryNames = allCategories.map((category) => category.name);
-
+        //load all
+        // const allCategories = await CategoriesModel.find();
         return res.json(allCategories);
     } catch (error) {
         return res.json(error);

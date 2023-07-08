@@ -4,6 +4,7 @@ import unidecode from "unidecode";
 import { NewsModel } from "../Model/News_Models";
 import { deleteImageFromCloudinary } from "../Controller/Post"
 
+//THÊM TIN TỨC
 var publicId: any;
 async function get_CreateNews(req: Request, res: Response) {
     res.render('createNews.ejs')
@@ -47,6 +48,7 @@ async function post_CreateNews(req: Request, res: Response) {
     }
 }
 
+//CẬP NHẬT TIN TỨC
 async function updateNews(req: Request, res: Response) {
     const id = req.params.id;
     const { title, description, content } = req.body;
@@ -69,8 +71,9 @@ async function updateNews(req: Request, res: Response) {
     }
 }
 
+//XÓA TIN TỨC
 async function deleteNews(req: Request, res: Response) {
-    const id = req.params.Id
+    const id = req.params.id
     try {
         await NewsModel.findOneAndDelete({ id: id })
         return res.json({ message: "Đã xóa bài viết" })
@@ -79,6 +82,7 @@ async function deleteNews(req: Request, res: Response) {
     }
 }
 
+//HIỂN THỊ CHI TIẾT TIN TỨC
 async function loadNews(req: Request, res: Response) {
     const newsId = req.params.id
     const news = await NewsModel.find({ id: newsId })
@@ -89,6 +93,7 @@ async function loadNews(req: Request, res: Response) {
     }
 }
 
+//HIỂN THỊ TẤT CẢ TIN TỨC
 async function loadAllNews(req: Request, res: Response) {
     const allnews = await NewsModel.find()
     res.json(allnews)

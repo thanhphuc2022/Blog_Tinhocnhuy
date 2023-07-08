@@ -1,5 +1,4 @@
 import mongoose, { Schema, Document } from "mongoose";
-import multer from "multer";
 
 interface Post extends Document {
     id: string,

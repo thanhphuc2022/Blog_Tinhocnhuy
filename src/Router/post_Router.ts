@@ -1,7 +1,7 @@
 import express from "express";
 import { Post } from "../Controller/Post";
 import { middleware } from "../middleware/jwt"
-import { midlleware_file } from "../Services/sp";
+import { midlleware_file } from "../middleware/file";
 
 const post_Router = express();
 
@@ -9,7 +9,7 @@ post_Router.get('/createPost', Post.post);
 
 post_Router.post('/createPost', midlleware_file, Post.createPost);
 
-post_Router.post('/updatePost/:id', Post.updatePost);
+post_Router.post('/updatePost/:id', midlleware_file, Post.updatePost);
 
 post_Router.post('/deletePost/:id', middleware, Post.deletePost);
 
