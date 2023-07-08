@@ -1,0 +1,32 @@
+import mongoose, { Collection, ObjectId, Document } from "mongoose";
+import { Schema } from "mongoose";
+
+interface Account extends Document {
+    username: string,
+    fullname: string,
+    email: string,
+    password: string,
+    refreshtoken: string
+}
+
+const accountSchema: Schema = new Schema<Account>({
+    username: { type: String, required: true },
+    fullname: { type: String, required: true },
+    email: { type: String, required: true },
+    password: { type: String, required: true, unique: false },
+    refreshtoken: { type: String, }
+}, { collection: 'Accounts' }
+);
+
+const AccountModel = mongoose.model<Account>('Accounts', accountSchema);
+
+// module.exports = AccountModel
+export default AccountModel;
+
+// export default class Account{
+//     constructor(
+//         public username:string,
+//         public password: string,
+//         public id?:ObjectId
+//     ){}
+// }

@@ -1,0 +1,212 @@
+import { Request, Response } from "express";
+import { PostModel } from "../Model/Post_Model";
+import unidecode from "unidecode";
+import CategoriesModel from "../Model/Categories_Model";
+import { v2 as cloudinary } from 'cloudinary';
+import { randomStringPost } from "../Services/sp";
+import fs from "fs";
+
+//UPLOAD HÌNH ẢNH LÊN COUDINARY KHI CHỌN HÌNH ẢNH TẠO BÀI VIẾT
+var publicId: any;
+async function uploadImagesPost(req: Request, res: Response) {
+    const file = req.file?.path;
+    if (!file) {
+        console.error('No file uploaded');
+        return res.status(400).json({ message: 'No file uploaded' });
+    }
+    try {
+        const result = await cloudinary.uploader.upload(file, { folder: 'Tinhocnhuy' });
+        res.json({ location: result.secure_url });
+        publicId = result.public_id
+        //    console.log({ location: result.secure_url, publicId: result.public_id })
+
+        // Sau khi tải lên thành công và trả về link ảnh, có thể xóa tệp tin tạm trên máy chủ
+        fs.unlink(file, (err) => {
+            if (err) {
+                console.error('Error deleting uploaded file:', err);
+            } else {
+                console.log('Uploaded file deleted:', file);
+            }
+        });
+
+    } catch (err) {
+        res.status(500).json({ error: 'Upload failed:' + err });
+    }
+}
+
+//GET THÊM BÀI VIẾT
+async function post(req: Request, res: Response) {
+    // res.render('createpost')
+    res.render('createpostLocal')
+}
+
+//POST THÊM BÀI VIẾT
+async function createPost(req: Request, res: Response) {
+    try {
+        const title = req.body.title;
+        const description = req.body.description;
+        const category = req.body.category;
+        const content = req.body.content;
+        const linkfile = req.file?.filename;
+        const Cate = await CategoriesModel.findOne({ name: category })
+        if (title == '' || description == '' || category == '' || content == '' || linkfile == '') {
+            deleteImageFromCloudinary(publicId)
+            return res.json({ message: "Vui lòng điền đầy đủ thông tin" })
+        }
+        if (!Cate) {
+            deleteImageFromCloudinary(publicId)
+            return res.json({ message: "Không tìm thấy Danh mục" })
+        }
+        //mã hóa slug
+        const titleNoAccent = unidecode(title);
+        const encodedStr = encodeURIComponent(titleNoAccent).replace(/%20/g, '-');
+        const slug = decodeURIComponent(encodedStr);
+
+        const idPost = await PostModel.findOne({ id: slug })
+        var newIdPost
+        if (!idPost) {
+            newIdPost = slug
+        } else {
+            newIdPost = slug + '-' + randomStringPost
+        }
+        const newPost = await PostModel.create({
+            id: newIdPost,//Id Post
+            title: title,
+            description: description,
+            avatar: linkfile,
+            content: content,
+            username: "admindemo",
+            categoryId: Cate.id,
+        });
+        return res.json(newPost);
+    } catch (err) {
+        deleteImageFromCloudinary(publicId)
+        console.log(err);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
+
+//CẬP NHẬT BÀI VIẾT
+async function updatePost(req: Request, res: Response) {
+    const id = req.params.id;
+    const title = req.body.title;
+    const description = req.body.description;
+    const category = req.body.category;
+    const content = req.body.content;
+    const linkfile = req.file?.filename;
+    const Cate = await CategoriesModel.findOne({ name: category })
+    if (title == '' || description == '' || category == '' || content == '' || linkfile == '') {
+        deleteImageFromCloudinary(publicId)
+        return res.json({ message: "Vui lòng điền đầy đủ thông tin" })
+    }
+    if (!Cate) {
+        deleteImageFromCloudinary(publicId)
+        return res.json({ message: "Không tìm thấy Danh mục" })
+    }
+    try {
+        await PostModel.findOneAndUpdate({ id: id }, {
+            title: title,
+            description: description,
+            avatar: linkfile,
+            content: content,
+            categoryId: Cate.id
+        })
+        return res.json({ message: "Cập nhật thành công" })
+    } catch (error) {
+        deleteImageFromCloudinary(publicId)
+        return res.status(500).json(error)
+    }
+}
+
+//XÓA BÀI VIẾT
+async function deletePost(req: Request, res: Response) {
+    const id = req.params.id
+    try {
+        await PostModel.findOneAndDelete({ id: id })
+        return res.json({ message: "Đã xóa bài viết" })
+    } catch (error) {
+        res.status(500).json(error)
+    }
+}
+
+//CHI TIẾT BÀI VIẾT
+async function loadPost(req: Request, res: Response) {
+    const postId = req.params.id;
+    const post = await PostModel.findOne({ id: postId })
+    if (!post) {
+        res.status(505).json({ message: "Bài viết không tồn tại" });
+    } else {
+        res.render('post', { post: post });
+    }
+}
+
+//TÌM KIẾM BÀI VIẾT THEO USERNAME
+async function loadPost_Username(req: Request, res: Response) {
+    try {
+        const post = await PostModel.find({
+            username: req.userId
+        })
+        return res.json(post);
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+//DANH SÁCH BÀI VIẾT THEO LOẠI
+async function loadPost_Categories(req: Request, res: Response) {
+    const categorieId = req.body.categorieId
+    try {
+        const post = await PostModel.find({ categoryId: categorieId })
+        //        const category = await CategoriesModel.findOne({ id: categorieId })
+        return res.json(post);
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+//HIỂN THỊ LƯỢT XEM
+async function loadViews(req: Request, res: Response) {
+    const postId = req.params.id;
+    const post = await PostModel.findOne({ id: postId })
+    if (!post) {
+        return res.status(505).json("Bài viết không tồn tại");
+    } else {
+        return res.json(`Số lượt xem của bài đăng ${postId}: ${post.views}`);
+    }
+}
+
+//ĐẾM LƯỢT XEM
+const countViews = async (req: Request, res: Response) => {
+    const postId = req.params.id;
+    const post = await PostModel.findOne({ id: postId })
+    if (!post) {
+        return res.status(505).json("Bài viết không tồn tại");
+    } else {
+        await PostModel.findOneAndUpdate({ id: postId }, { $inc: { views: 1 } })
+        return res.json(`Số lượt xem của bài đăng ${postId}: ${post.views}`);
+    }
+}
+
+//HÀM XÓA HÌNH ẢNH ĐÃ UPLOAD LÊN COUDINARY
+export async function deleteImageFromCloudinary(publicId: string) {
+    try {
+        const result = await cloudinary.uploader.destroy(publicId);
+        console.log('Image deleted from Cloudinary:', result);
+    } catch (err) {
+        console.log('Error deleting image from Cloudinary:', err);
+    }
+}
+
+export const Post = {
+    post,
+    createPost,
+    updatePost,
+    deletePost,
+    loadPost,
+    loadPost_Username,
+    loadPost_Categories,
+    loadViews,
+    countViews,
+    uploadImagesPost
+}
