@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { PostModel } from "../Model/Post_Model";
 import unidecode from "unidecode";
 import CategoriesModel from "../Model/Categories_Model";
@@ -6,7 +6,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import { randomStringPost } from "../Services/sp";
 import fs from "fs";
 
-//UPLOAD HÌNH ẢNH LÊN COUDINARY KHI CHỌN HÌNH ẢNH TẠO BÀI VIẾT
+//UPLOAD HÌNH ẢNH LÊN CLOUDINARY KHI CHỌN HÌNH ẢNH TẠO BÀI VIẾT
 var publicId: any;
 async function uploadImagesPost(req: Request, res: Response) {
     const file = req.file?.path;
@@ -18,8 +18,10 @@ async function uploadImagesPost(req: Request, res: Response) {
         const result = await cloudinary.uploader.upload(file, { folder: 'Tinhocnhuy' });
         res.json({ location: result.secure_url });
         publicId = result.public_id
-        //    console.log({ location: result.secure_url, publicId: result.public_id })
-
+        //link anh
+        // console.log({ location: result.secure_url})
+        //id anh, bao gom fodel/id
+        console.log({ publicId: result.public_id })
         // Sau khi tải lên thành công và trả về link ảnh, có thể xóa tệp tin tạm trên máy chủ
         fs.unlink(file, (err) => {
             if (err) {
@@ -75,6 +77,7 @@ async function createPost(req: Request, res: Response) {
             description: description,
             avatar: linkfile,
             content: content,
+            // images: [publicId],
             username: "admindemo",
             categoryId: Cate.id,
         });
@@ -121,12 +124,27 @@ async function updatePost(req: Request, res: Response) {
 
 //XÓA BÀI VIẾT
 async function deletePost(req: Request, res: Response) {
-    const id = req.params.id
+    const id = req.params.id;
     try {
-        await PostModel.findOneAndDelete({ id: id })
-        return res.json({ message: "Đã xóa bài viết" })
+        const post = await PostModel.findOne({ id: id });
+        const imageRegex = /<img src="([^"]+)"/g;
+        const imageUrlMatches = post?.content.match(imageRegex);
+        if (imageUrlMatches) {
+            await Promise.all(imageUrlMatches.map(async (imageUrlMatch) => {
+                const imageUrl = imageUrlMatch.match(/<img src="([^"]+)"/)?.[1];
+                if (imageUrl) {
+                    const urlObject = new URL(imageUrl);
+                    const path = urlObject.pathname;
+                    const idImage = path.substring(path.indexOf('Tinhocnhuy/'), path.lastIndexOf('.'));
+                    console.log(idImage);
+                    await deleteImageFromCloudinary(idImage);
+                }
+            }));
+        }
+        await PostModel.deleteOne({ id: id });
+        return res.json({ message: "Đã xóa bài viết" });
     } catch (error) {
-        res.status(500).json(error)
+        res.status(500).json(error);
     }
 }
 

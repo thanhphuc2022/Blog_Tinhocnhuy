@@ -73,12 +73,27 @@ async function updateNews(req: Request, res: Response) {
 
 //XÓA TIN TỨC
 async function deleteNews(req: Request, res: Response) {
-    const id = req.params.id
+    const id = req.params.id;
     try {
-        await NewsModel.findOneAndDelete({ id: id })
-        return res.json({ message: "Đã xóa bài viết" })
+        const post = await NewsModel.findOne({ id: id });
+        const imageRegex = /<img src="([^"]+)"/g;
+        const imageUrlMatches = post?.content.match(imageRegex);
+        if (imageUrlMatches) {
+            await Promise.all(imageUrlMatches.map(async (imageUrlMatch) => {
+                const imageUrl = imageUrlMatch.match(/<img src="([^"]+)"/)?.[1];
+                if (imageUrl) {
+                    const urlObject = new URL(imageUrl);
+                    const path = urlObject.pathname;
+                    const idImage = path.substring(path.indexOf('Tinhocnhuy/'), path.lastIndexOf('.'));
+                    console.log(idImage);
+                    await deleteImageFromCloudinary(idImage);
+                }
+            }));
+        }
+        await NewsModel.deleteOne({ id: id });
+        return res.json({ message: "Đã xóa bài viết" });
     } catch (error) {
-        res.status(500).json(error)
+        res.status(500).json(error);
     }
 }
 
