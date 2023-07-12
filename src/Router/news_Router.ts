@@ -13,8 +13,10 @@ news_Router.post('/updateNews/:id', midlleware_file, News.updateNews)
 
 news_Router.post('/deleteNews/:id', News.deleteNews)
 
-news_Router.post('/News/:id', News.loadNews)
+news_Router.get('/News/:id', News.loadNews)
 
-news_Router.post('/AllNews', News.loadAllNews)
+news_Router.get('/AllNews', News.loadAllNews)
+
+news_Router.get('/api/randomNews', News.loadRandomNews)
 
 export default news_Router;

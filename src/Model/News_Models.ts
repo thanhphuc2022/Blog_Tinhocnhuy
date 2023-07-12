@@ -14,7 +14,7 @@ interface News extends Document {
 const newsSchema: Schema = new Schema<News>({
     id: { type: String, required: true, unique: true },
     title: { type: String, required: true, },
-    description: { type: String, required: true, },
+    description: { type: String, required: false },
     avatar: { type: String, required: true, },
     content: { type: String, required: true, },
     username: { type: String, required: true, },

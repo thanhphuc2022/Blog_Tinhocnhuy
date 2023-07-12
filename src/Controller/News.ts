@@ -3,6 +3,7 @@ import { randomStringPost } from "../Services/sp";
 import unidecode from "unidecode";
 import { NewsModel } from "../Model/News_Models";
 import { deleteImageFromCloudinary } from "../Controller/Post"
+import { error } from "console";
 
 //THÊM TIN TỨC
 var publicId: any;
@@ -100,11 +101,11 @@ async function deleteNews(req: Request, res: Response) {
 //HIỂN THỊ CHI TIẾT TIN TỨC
 async function loadNews(req: Request, res: Response) {
     const newsId = req.params.id
-    const news = await NewsModel.find({ id: newsId })
+    const news = await NewsModel.findOne({ id: newsId })
     if (!news) {
         res.status(505).json({ message: "Bài viết không tồn tại" });
     } else {
-        res.json(news)
+        res.render('news.ejs', { news: news })
     }
 }
 
@@ -113,6 +114,23 @@ async function loadAllNews(req: Request, res: Response) {
     const allnews = await NewsModel.find()
     res.json(allnews)
 }
+//HIỂN THỊ NGẪU NHIÊN TIN TỨC
+async function loadRandomNews(req: Request, res: Response) {
+    const numberOfRecords = 5;
+    await NewsModel.aggregate([
+        { $sample: { size: numberOfRecords } },
+        { $limit: numberOfRecords }
+    ])
+        .exec()
+        .then(results => {
+            // `results` sẽ chứa một mảng gồm `numberOfRecords` bản ghi ngẫu nhiên
+            res.json(results)
+        })
+        .catch(err => {
+            // Xử lý lỗi
+            console.log(err)
+        });
+}
 
 export const News = {
     get_CreateNews,
@@ -120,5 +138,6 @@ export const News = {
     updateNews,
     deleteNews,
     loadNews,
-    loadAllNews
+    loadAllNews,
+    loadRandomNews
 }
