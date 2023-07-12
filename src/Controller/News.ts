@@ -123,11 +123,9 @@ async function loadRandomNews(req: Request, res: Response) {
     ])
         .exec()
         .then(results => {
-            // `results` sẽ chứa một mảng gồm `numberOfRecords` bản ghi ngẫu nhiên
             res.json(results)
         })
         .catch(err => {
-            // Xử lý lỗi
             console.log(err)
         });
 }
