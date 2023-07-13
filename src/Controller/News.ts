@@ -105,7 +105,7 @@ async function loadNews(req: Request, res: Response) {
     if (!news) {
         res.status(505).json({ message: "Bài viết không tồn tại" });
     } else {
-        res.render('news.ejs', { news: news })
+        res.render('news.ejs', { news: news.content })
     }
 }
 
