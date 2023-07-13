@@ -4,6 +4,7 @@ import unidecode from "unidecode";
 import { NewsModel } from "../Model/News_Models";
 import { deleteImageFromCloudinary } from "../Controller/Post"
 import { error } from "console";
+import { title } from "process";
 
 //THÊM TIN TỨC
 var publicId: any;
@@ -41,7 +42,8 @@ async function post_CreateNews(req: Request, res: Response) {
             content: content,
             username: "admindemo",
         });
-        return res.json(newPost);
+        // return res.json(newPost);
+        return res.json({ message: "Thêm thành công" })
     } catch (error) {
         deleteImageFromCloudinary(publicId)
         console.log(error);
@@ -112,15 +114,22 @@ async function loadNews(req: Request, res: Response) {
 
 //HIỂN THỊ TẤT CẢ TIN TỨC
 async function loadAllNews(req: Request, res: Response) {
-    const allnews = await NewsModel.find()
-    res.json(allnews)
+    try {
+        const allNews = await NewsModel.find().select('title description avatar');
+        return res.json(allNews)
+        // res.render('listnews', { news: allNews });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 }
 //HIỂN THỊ NGẪU NHIÊN TIN TỨC
 async function loadRandomNews(req: Request, res: Response) {
     const numberOfRecords = 5;
     await NewsModel.aggregate([
         { $sample: { size: numberOfRecords } },
-        { $limit: numberOfRecords }
+        { $limit: numberOfRecords },
+        { $project: { _id: 0, title: 1, description: 1, avatar: 1 } }
     ])
         .exec()
         .then(results => {
