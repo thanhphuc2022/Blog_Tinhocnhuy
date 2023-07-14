@@ -26,7 +26,6 @@ async function uploadImagesNews(req: Request, res: Response) {
                 console.log('Uploaded file deleted:', file);
             }
         });
-
     } catch (err) {
         res.status(500).json({ error: 'Upload failed:' + err });
     }
@@ -150,19 +149,18 @@ async function loadAllNews(req: Request, res: Response) {
 }
 //HIỂN THỊ NGẪU NHIÊN TIN TỨC
 async function loadRandomNews(req: Request, res: Response) {
-    const numberOfRecords = 5;
-    await NewsModel.aggregate([
-        { $sample: { size: numberOfRecords } },
-        { $limit: numberOfRecords },
-        { $project: { _id: 0, title: 1, description: 1, avatar: 1 } }
-    ])
-        .exec()
-        .then(results => {
-            res.json(results)
-        })
-        .catch(err => {
-            console.log(err)
-        });
+    try {
+        const numberOfRecords = 5;
+        const news = await NewsModel.aggregate([
+            { $sample: { size: numberOfRecords } },
+            { $limit: numberOfRecords },
+            { $project: { _id: 0, title: 1, description: 1, avatar: 1 } }
+        ])
+        res.json(news)
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 }
 
 export const News = {
