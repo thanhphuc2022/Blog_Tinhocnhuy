@@ -3,11 +3,36 @@ import { randomStringPost } from "../Services/sp";
 import unidecode from "unidecode";
 import { NewsModel } from "../Model/News_Models";
 import { deleteImageFromCloudinary } from "../Controller/Post"
-import { error } from "console";
-import { title } from "process";
+import { v2 as cloudinary } from 'cloudinary';
+import fs from "fs";
+
+//UPLOAD HÌNH ẢNH LÊN CLOUDINARY KHI CHỌN HÌNH ẢNH TẠO BÀI VIẾT
+var publicId: any;
+async function uploadImagesNews(req: Request, res: Response) {
+    const file = req.file?.path;
+    if (!file) {
+        console.error('No file uploaded');
+        return res.status(400).json({ message: 'No file uploaded' });
+    }
+    try {
+        const result = await cloudinary.uploader.upload(file, { folder: 'Tinhocnhuy' });
+        res.json({ location: result.secure_url });
+        publicId = result.public_id
+        console.log({ publicId: result.public_id })
+        fs.unlink(file, (err) => {
+            if (err) {
+                console.error('Error deleting uploaded file:', err);
+            } else {
+                console.log('Uploaded file deleted:', file);
+            }
+        });
+
+    } catch (err) {
+        res.status(500).json({ error: 'Upload failed:' + err });
+    }
+}
 
 //THÊM TIN TỨC
-var publicId: any;
 async function get_CreateNews(req: Request, res: Response) {
     res.render('createNews.ejs')
 }
@@ -108,7 +133,7 @@ async function loadNews(req: Request, res: Response) {
         res.status(505).json({ message: "Bài viết không tồn tại" });
     } else {
         // res.render('news.ejs', { news: news.content })
-        res.json(news.content)
+        res.json(news)
     }
 }
 
@@ -147,5 +172,6 @@ export const News = {
     deleteNews,
     loadNews,
     loadAllNews,
-    loadRandomNews
+    loadRandomNews,
+    uploadImagesNews
 }

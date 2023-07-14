@@ -19,4 +19,6 @@ news_Router.get('/AllNews', News.loadAllNews)
 
 news_Router.get('/api/randomNews', News.loadRandomNews)
 
+news_Router.post('/api/uploadimagesNews', midlleware_file, News.uploadImagesNews)
+
 export default news_Router;

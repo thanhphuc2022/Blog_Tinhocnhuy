@@ -43,7 +43,7 @@
     "nodemailer": "^6.9.1",
     "rimraf": "^5.0.0",
     "summernote": "^0.8.20",
-    "tinymce": "^6.5.0",
+    "tinymce": "^6.6.0",
     "typescript": "^5.0.4",
     "unidecode": "^0.1.8",
     "uuid": "^9.0.0"
