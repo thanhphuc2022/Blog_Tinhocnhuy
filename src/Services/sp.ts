@@ -1,3 +1,4 @@
+import { v2 as cloudinary } from 'cloudinary';
 //hàm tạo chuỗi ngẫu nhiên tù 1->10 kí tự
 function generateRandomStringPost() {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -11,5 +12,14 @@ function generateRandomStringPost() {
     }
     return result;
 }
-// Sử dụng hàm để tạo chuỗi ngẫu nhiên
 export const randomStringPost = generateRandomStringPost();
+
+//HÀM XÓA HÌNH ẢNH ĐÃ UPLOAD LÊN COUDINARY
+export async function deleteImageFromCloudinary(publicId: string) {
+    try {
+        const result = await cloudinary.uploader.destroy(publicId);
+        console.log('Image deleted from Cloudinary:', result);
+    } catch (err) {
+        console.log('Error deleting image from Cloudinary:', err);
+    }
+}

@@ -3,7 +3,7 @@ import { PostModel } from "../Model/Post_Model";
 import unidecode from "unidecode";
 import CategoriesModel from "../Model/Categories_Model";
 import { v2 as cloudinary } from 'cloudinary';
-import { randomStringPost } from "../Services/sp";
+import { randomStringPost, deleteImageFromCloudinary } from "../Services/sp";
 import fs from "fs";
 
 //UPLOAD HÌNH ẢNH LÊN CLOUDINARY KHI CHỌN HÌNH ẢNH TẠO BÀI VIẾT
@@ -89,20 +89,16 @@ async function createPost(req: Request, res: Response) {
     }
 }
 
-
 //CẬP NHẬT BÀI VIẾT
 async function updatePost(req: Request, res: Response) {
     const id = req.params.id;
-    const title = req.body.title;
-    const description = req.body.description;
-    const category = req.body.category;
-    const content = req.body.content;
+    const { title, description, content, category } = req.body;
     const linkfile = req.file?.filename;
     const Cate = await CategoriesModel.findOne({ name: category })
-    if (title == '' || description == '' || category == '' || content == '' || linkfile == '') {
-        deleteImageFromCloudinary(publicId)
-        return res.json({ message: "Vui lòng điền đầy đủ thông tin" })
-    }
+    // if (title == '' || description == '' || category == '' || content == '' || linkfile == '') {
+    //     deleteImageFromCloudinary(publicId)
+    //     return res.json({ message: "Vui lòng điền đầy đủ thông tin" })
+    // }
     if (!Cate) {
         deleteImageFromCloudinary(publicId)
         return res.json({ message: "Không tìm thấy Danh mục" })
@@ -203,16 +199,6 @@ const countViews = async (req: Request, res: Response) => {
     } else {
         await PostModel.findOneAndUpdate({ id: postId }, { $inc: { views: 1 } })
         return res.json(`Số lượt xem của bài đăng ${postId}: ${post.views}`);
-    }
-}
-
-//HÀM XÓA HÌNH ẢNH ĐÃ UPLOAD LÊN COUDINARY
-export async function deleteImageFromCloudinary(publicId: string) {
-    try {
-        const result = await cloudinary.uploader.destroy(publicId);
-        console.log('Image deleted from Cloudinary:', result);
-    } catch (err) {
-        console.log('Error deleting image from Cloudinary:', err);
     }
 }
 

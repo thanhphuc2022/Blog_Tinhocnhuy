@@ -2,7 +2,9 @@ import { Request, Response } from "express";
 import { randomStringPost } from "../Services/sp";
 import unidecode from "unidecode";
 import { NewsModel } from "../Model/News_Models";
-import { deleteImageFromCloudinary } from "../Controller/Post"
+import Types_News_Model from "../Model/Types_News_Models"
+import TagModel from "../Model/Tag_Models";
+import { deleteImageFromCloudinary } from "../Services/sp"
 import { v2 as cloudinary } from 'cloudinary';
 import fs from "fs";
 
@@ -42,9 +44,16 @@ async function post_CreateNews(req: Request, res: Response) {
         const description = req.body.description;
         const linkfile = req.file?.filename;
         const content = req.body.content;
-        if (title == '' || description == '' || content == '' || linkfile == '') {
+        const nametypes = req.body.types;
+        const tag = req.body.tag;
+        if (title == '' || description == '' || content == '' || linkfile == '' || linkfile == '' || nametypes == '') {
             deleteImageFromCloudinary(publicId)
             return res.json({ message: "Vui lòng điền đầy đủ thông tin" })
+        }
+        const types = await Types_News_Model.findOne({ name: nametypes })
+        if (!types) {
+            deleteImageFromCloudinary(publicId)
+            return res.json({ message: "Không tìm thấy danh mục bài viết" })
         }
         //mã hóa slug
         const titleNoAccent = unidecode(title);
@@ -65,6 +74,8 @@ async function post_CreateNews(req: Request, res: Response) {
             avatar: linkfile,
             content: content,
             username: "admindemo",
+            typesid: types.id,
+            tag: tag
         });
         // return res.json(newPost);
         return res.json({ message: "Thêm thành công" })
@@ -77,21 +88,35 @@ async function post_CreateNews(req: Request, res: Response) {
 
 //CẬP NHẬT TIN TỨC
 async function updateNews(req: Request, res: Response) {
-    const id = req.params.id;
-    const { title, description, content } = req.body;
-    const linkfile = req.file?.filename;
-    if (title == '' || description == '' || content == '' || linkfile == '') {
-        deleteImageFromCloudinary(publicId)
-        return res.json({ message: "Vui lòng điền đầy đủ thông tin" })
-    }
     try {
-        await NewsModel.findOneAndUpdate({ id: id }, {
-            title: title,
-            description: description,
-            avatar: linkfile,
-            content: content
-        })
-        return res.json({ message: "Cập nhật thành công" })
+        const id = req.params.id;
+        const { title, description, content, nametypes, tag } = req.body;
+        const linkfile = req.file?.filename;
+        // if (title == '' || description == '' || content == '' || linkfile == '' || nametypes == '') {
+        //     deleteImageFromCloudinary(publicId)
+        //     return res.json({ message: "Vui lòng điền đầy đủ thông tin" })
+        // }
+        const types = await Types_News_Model.findOne({ name: nametypes })
+        if (!types) {
+            deleteImageFromCloudinary(publicId)
+            return res.json({ message: "Không tìm thấy Loại tin tức" })
+        }
+        const findtag = await TagModel.findOne({ name: tag })
+        if (!findtag) {
+            deleteImageFromCloudinary(publicId)
+            return res.json({ message: "Không tìm thấy Tag" })
+        }
+        else {
+            await NewsModel.findOneAndUpdate({ id: id }, {
+                title: title,
+                description: description,
+                avatar: linkfile,
+                content: content,
+                typesid: types.id,
+                tag: tag
+            })
+            return res.json({ message: "Cập nhật thành công" })
+        }
     } catch (error) {
         deleteImageFromCloudinary(publicId)
         return res.status(500).json(error)
@@ -131,8 +156,8 @@ async function loadNews(req: Request, res: Response) {
     if (!news) {
         res.status(505).json({ message: "Bài viết không tồn tại" });
     } else {
-        // res.render('news.ejs', { news: news.content })
-        res.json(news)
+        res.render('news.ejs', { news: news.content })
+        // res.json(news)
     }
 }
 
@@ -163,6 +188,40 @@ async function loadRandomNews(req: Request, res: Response) {
     }
 }
 
+//DANH SÁCH BÀI VIẾT THEO DANH MỤC
+async function loadNews_Types(req: Request, res: Response) {
+    const typesid = req.body.typesid
+    try {
+        const news = await NewsModel.find({ typesid: typesid })
+        return res.json(news);
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+//HIỂN THỊ LƯỢT XEM
+async function loadViews(req: Request, res: Response) {
+    const newsId = req.params.id;
+    const news = await NewsModel.findOne({ id: newsId })
+    if (!news) {
+        return res.status(505).json("Bài viết không tồn tại");
+    } else {
+        return res.json(`Số lượt xem của bài viết ${newsId}: ${news.views}`)
+    }
+}
+
+//ĐẾM LƯỢT XEM
+async function countViews(req: Request, res: Response) {
+    const newsId = req.params.id;
+    const news = await NewsModel.findOne({ id: newsId })
+    if (!news) {
+        return res.status(505).json("Bài viết không tồn tại");
+    } else {
+        await NewsModel.findOneAndUpdate({ id: newsId }, { $inc: { views: 1 } })
+        return res.json(`Số lượt xem của bài viết ${newsId}: ${news.views}`)
+    }
+}
+
 export const News = {
     get_CreateNews,
     post_CreateNews,
@@ -171,5 +230,8 @@ export const News = {
     loadNews,
     loadAllNews,
     loadRandomNews,
+    loadNews_Types,
+    loadViews,
+    countViews,
     uploadImagesNews
 }

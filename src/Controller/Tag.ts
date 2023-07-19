@@ -1,0 +1,44 @@
+import { Request, Response } from "express";
+import TagModel from "../Model/Tag_Models";
+
+async function createTag(req: Request, res: Response) {
+    try {
+        const tag = req.body.tag;
+        const findTag = await TagModel.findOne({ name: tag })
+        if (findTag) {
+            return res.status(500).json({ message: "Tag đã tồn tại" });
+        } else {
+            await TagModel.create({
+                name: tag
+            })
+            return res.json({ message: "Thêm Tag thành công" })
+        }
+    } catch (error) {
+        return res.status(500).json(error)
+    }
+}
+
+async function deleteTag(req: Request, res: Response) {
+    try {
+        const tag = req.body.tag;
+        await TagModel.findOneAndDelete({ name: tag })
+        return res.json({ message: "Đã xóa" })
+    } catch (error) {
+        return res.status(500).json(error)
+    }
+}
+
+async function loadAllTag(res: Response) {
+    try {
+        const AllTag = await TagModel.find({}, 'name');
+        return res.json(AllTag);
+    } catch (error) {
+        return res.status(500).json(error)
+    }
+}
+
+export const Tag = {
+    createTag,
+    deleteTag,
+    loadAllTag
+}

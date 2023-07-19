@@ -5,8 +5,10 @@ import mongoose from "mongoose";
 import { CONFIG } from "./config/config";
 import auth_Router from "./Router/auth_Router";
 import post_Router from "./Router/post_Router";
-import news_Router from "./Router/news_Router"
+import news_Router from "./Router/news_Router";
+import types_Router from "./Router/types_news_Router";
 import categories_Router from "./Router/categories_Router";
+import tag_Router from "./Router/tag_Router";
 import bodyParser from "body-parser";
 import path from "path";
 import { v2 as cloudinary } from 'cloudinary';
@@ -56,6 +58,10 @@ app.use('/', post_Router);
 app.use('/', news_Router);
 //categories
 app.use('/', categories_Router);
+//types_news
+app.use('/', types_Router);
+//tag
+app.use('/', tag_Router);
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src', 'views'));

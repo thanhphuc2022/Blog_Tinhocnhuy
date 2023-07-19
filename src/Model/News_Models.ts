@@ -8,7 +8,9 @@ interface News extends Document {
     content: string,
     username: string,
     views: number,
-    date: string
+    date: string,
+    typesid: string,
+    tag: [string]
 }
 
 const newsSchema: Schema = new Schema<News>({
@@ -20,6 +22,8 @@ const newsSchema: Schema = new Schema<News>({
     username: { type: String, required: true, },
     views: { type: Number, default: 0, },
     date: { type: String, default: () => new Date().toLocaleDateString() },
+    typesid: { type: String, ref: 'Types_News', required: true },
+    tag: { type: [String], ref: 'Tag', required: false }
 }, { collection: 'News' })
 
 const NewsModel = mongoose.model<News>('News', newsSchema);
