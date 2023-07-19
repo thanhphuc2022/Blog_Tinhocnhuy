@@ -12,7 +12,9 @@ import tag_Router from "./Router/tag_Router";
 import bodyParser from "body-parser";
 import path from "path";
 import { v2 as cloudinary } from 'cloudinary';
+const date = new Date();
 
+const formatted = date.toUTCString();
 //ket noi csdl mongoDB
 mongoose
     .connect(CONFIG.mongo.url)
@@ -69,5 +71,5 @@ app.use(express.static(path.join(__dirname, '../public')));
 // app.use(express.static('public'));
 
 app.listen(CONFIG.Server.port, () => {
-    console.log(`Example app listening at http://localhost:${CONFIG.Server.port}`)
+    console.log(`Example app listening at http://localhost:${CONFIG.Server.port} (${formatted})`)
 })
