@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import session from 'express-session';
 import cookieParser from 'cookie-parser';
 import mongoose from "mongoose";
@@ -51,7 +51,9 @@ app.use(
         saveUninitialized: true,
     })
 );
-
+app.get('/home', function (req: Request, res: Response) {
+    res.json("Trang này của tao")
+})
 //auth
 app.use('/', auth_Router);
 //post
