@@ -14,7 +14,9 @@ import path from "path";
 import { v2 as cloudinary } from 'cloudinary';
 const date = new Date();
 
-const formatted = date.toUTCString();
+//npm start
+//HIEN GIO KHI BUILD
+const formatted = date.toTimeString();
 //ket noi csdl mongoDB
 mongoose
     .connect(CONFIG.mongo.url)
