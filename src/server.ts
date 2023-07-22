@@ -53,7 +53,7 @@ app.use(
         saveUninitialized: true,
     })
 );
-app.get('/home', function (req: Request, res: Response) {
+app.get('/', function (req: Request, res: Response) {
     res.json("Trang này của tao")
 })
 //auth
