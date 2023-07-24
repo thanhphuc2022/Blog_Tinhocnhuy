@@ -15,17 +15,17 @@ news_Router.post('/deleteNews/:id', News.deleteNews)
 
 news_Router.get('/News/:id', News.loadNews)
 
-news_Router.get('/api/AllNews', middleware, News.loadAllNews)
+news_Router.get('/AllNews', middleware, News.loadAllNews)
 
-news_Router.get('/api/randomNews', News.loadRandomNews)
+news_Router.get('/randomNews', News.loadRandomNews)
 
-news_Router.get('/api/typesNews', News.loadNews_Types)
+news_Router.get('/typesNews', News.loadNews_Types)
 
-news_Router.get('/api/viewsNews/:id', News.loadViews)
+news_Router.get('/viewsNews/:id', News.loadViews)
 
-news_Router.get('/api/countviewsNews/:id', News.countViews)
+news_Router.get('/countviewsNews/:id', News.countViews)
 
 //upload hình ảnh lên cloudinary , sử dụng cho Bài viết và Tin tức
-news_Router.post('/api/uploadimagesNews', midlleware_file, News.uploadImagesNews)
+news_Router.post('/uploadimagesNews', midlleware_file, News.uploadImagesNews)
 
 export default news_Router;

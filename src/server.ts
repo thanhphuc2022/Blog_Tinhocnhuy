@@ -57,17 +57,17 @@ app.get('/', function (req: Request, res: Response) {
     res.json("Trang này của tao")
 })
 //auth
-app.use('/', auth_Router);
+app.use('/api', auth_Router);
 //post
-app.use('/', post_Router);
+app.use('/api', post_Router);
 //news
-app.use('/', news_Router);
+app.use('/api', news_Router);
 //categories
-app.use('/', categories_Router);
+app.use('/api', categories_Router);
 //types_news
-app.use('/', types_Router);
+app.use('/api', types_Router);
 //tag
-app.use('/', tag_Router);
+app.use('/api', tag_Router);
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src', 'views'));
