@@ -3,7 +3,7 @@ import { PostModel } from "../Model/Post_Model";
 import unidecode from "unidecode";
 import CategoriesModel from "../Model/Categories_Model";
 import { v2 as cloudinary } from 'cloudinary';
-import { randomStringPost, deleteImageFromCloudinary } from "../Services/sp";
+import { randomStringPost, deleteImageFromCloudinary, convertToSlug } from "../Services/sp";
 import fs from "fs";
 
 //UPLOAD HÌNH ẢNH LÊN CLOUDINARY KHI CHỌN HÌNH ẢNH TẠO BÀI VIẾT
@@ -60,9 +60,7 @@ async function createPost(req: Request, res: Response) {
             return res.json({ message: "Không tìm thấy Danh mục" })
         }
         //mã hóa slug
-        const titleNoAccent = unidecode(title);
-        const encodedStr = encodeURIComponent(titleNoAccent).replace(/%20/g, '-');
-        const slug = decodeURIComponent(encodedStr);
+        const slug = convertToSlug(title);
 
         const idPost = await PostModel.findOne({ id: slug })
         var newIdPost

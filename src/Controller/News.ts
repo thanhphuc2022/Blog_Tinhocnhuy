@@ -4,7 +4,7 @@ import unidecode from "unidecode";
 import { NewsModel } from "../Model/News_Models";
 import Types_News_Model from "../Model/Types_News_Models"
 import TagModel from "../Model/Tag_Models";
-import { deleteImageFromCloudinary } from "../Services/sp"
+import { deleteImageFromCloudinary, convertToSlug } from "../Services/sp"
 import { v2 as cloudinary } from 'cloudinary';
 import fs from "fs";
 
@@ -56,9 +56,7 @@ async function post_CreateNews(req: Request, res: Response) {
             return res.json({ message: "Không tìm thấy danh mục bài viết" })
         }
         //mã hóa slug
-        const titleNoAccent = unidecode(title);
-        const encodedStr = encodeURIComponent(titleNoAccent).replace(/%20/g, '-');
-        const slug = decodeURIComponent(encodedStr);
+        const slug = convertToSlug(title)
 
         const idNews = await NewsModel.findOne({ id: slug })
         var newIdNews

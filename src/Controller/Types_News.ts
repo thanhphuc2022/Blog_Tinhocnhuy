@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import Types_News_Model from "../Model/Types_News_Models";
 import unidecode from "unidecode";
-import { randomStringPost } from "../Services/sp";
+import { convertToSlug, randomStringPost } from "../Services/sp";
 
 //THÊM DANH MỤC BÀI VIẾT
 async function createTypes_News(req: Request, res: Response) {
@@ -10,9 +10,8 @@ async function createTypes_News(req: Request, res: Response) {
         if (name == '') {
             return res.json({ message: 'Vui lòng điền đầy đủ thông tin' })
         }
-        const titleNoAccent = unidecode(name);
-        const encodedStr = encodeURIComponent(titleNoAccent).replace(/%20/g, '-');
-        const id = decodeURIComponent(encodedStr);
+        //MÃ hóa slug
+        const id = convertToSlug(name)
 
         const findIdCategories_News = await Types_News_Model.findOne({ id: id })
         if (findIdCategories_News) {

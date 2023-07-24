@@ -1,16 +1,18 @@
 import { Request, Response } from "express";
 import CategoriesModel from "../Model/Categories_Model";
 import unidecode from "unidecode";
-import { randomStringPost } from "../Services/sp";
+import { randomStringPost, convertToSlug } from "../Services/sp";
 
 //THÊM DANH MỤC
 async function createCategories(req: Request, res: Response) {
     try {
         const name = req.body.name;
         //mã hóa Loại bài viết
-        const titleNoAccent = unidecode(name);
-        const encodedStr = encodeURIComponent(titleNoAccent).replace(/%20/g, '-');
-        const id = decodeURIComponent(encodedStr);
+        const id = convertToSlug(name)
+
+        // const titleNoAccent = unidecode(name);
+        // const encodedStr = encodeURIComponent(titleNoAccent).replace(/%20/g, '-');
+        // const id = decodeURIComponent(encodedStr);
 
         const findIdCategories = await CategoriesModel.findOne({ id: id })
         var newIdCategory
