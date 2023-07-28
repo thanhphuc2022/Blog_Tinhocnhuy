@@ -79,7 +79,7 @@ async function createPost(req: Request, res: Response) {
             username: "admindemo",
             categoryId: Cate.id,
         });
-        return res.json(newPost);
+        return res.json({ message: "Đã thêm bài viết" });
     } catch (err) {
         deleteImageFromCloudinary(publicId)
         console.log(err);
@@ -149,7 +149,8 @@ async function loadPost(req: Request, res: Response) {
     if (!post) {
         res.status(505).json({ message: "Bài viết không tồn tại" });
     } else {
-        res.render('post', { post: post });
+        // res.render('post', { post: post });
+        res.json(post)
     }
 }
 
@@ -167,7 +168,7 @@ async function loadPost_Username(req: Request, res: Response) {
 
 //DANH SÁCH BÀI VIẾT THEO LOẠI
 async function loadPost_Categories(req: Request, res: Response) {
-    const categorieId = req.body.categorieId
+    const categorieId = req.params.id
     try {
         const post = await PostModel.find({ categoryId: categorieId })
         //        const category = await CategoriesModel.findOne({ id: categorieId })

@@ -19,7 +19,7 @@ news_Router.get('/AllNews', middleware, News.loadAllNews)
 
 news_Router.get('/randomNews', News.loadRandomNews)
 
-news_Router.get('/typesNews', News.loadNews_Types)//
+news_Router.get('/typesNews/:id', News.loadNews_Types)//
 
 news_Router.get('/tag/:id', News.LoadNews_Tag)
 

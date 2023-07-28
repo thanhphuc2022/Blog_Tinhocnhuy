@@ -179,7 +179,7 @@ async function loadRandomNews(req: Request, res: Response) {
             { $limit: numberOfRecords },
             { $project: { _id: 0, title: 1, description: 1, avatar: 1 } }
         ])
-        res.json(news)
+        return res.json(news)
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal server error' });
@@ -188,7 +188,7 @@ async function loadRandomNews(req: Request, res: Response) {
 
 //DANH SÁCH BÀI VIẾT THEO DANH MỤC
 async function loadNews_Types(req: Request, res: Response) {
-    const typesid = req.body.typesid
+    const typesid = req.params.id
     try {
         const news = await NewsModel.find({ typesid: typesid })
         return res.json(news);
