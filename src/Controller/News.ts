@@ -197,6 +197,17 @@ async function loadNews_Types(req: Request, res: Response) {
     }
 }
 
+//DANH SÁCH BÀI VIẾT THEO TAG
+async function LoadNews_Tag(req: Request, res: Response) {
+    const tagid = req.params.id
+    try {
+        const tag = await NewsModel.find({ tag: tagid })
+        return res.json(tag)
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 //HIỂN THỊ LƯỢT XEM
 async function loadViews(req: Request, res: Response) {
     const newsId = req.params.id;
@@ -229,6 +240,7 @@ export const News = {
     loadAllNews,
     loadRandomNews,
     loadNews_Types,
+    LoadNews_Tag,
     loadViews,
     countViews,
     uploadImagesNews
