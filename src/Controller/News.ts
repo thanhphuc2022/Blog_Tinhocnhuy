@@ -208,6 +208,23 @@ async function LoadNews_Tag(req: Request, res: Response) {
     }
 }
 
+//HIỂN THỊ 5 BÀI VIẾT CÓ NHIỀU LƯỢT XEM NHẤT TRONG NGÀY
+async function LoadNews_Top5_ViewstoDay(req: Request, res: Response) {
+    try {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Lấy ngày hiện tại và đặt giờ về 00:00:00
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1); // Ngày tiếp theo
+
+        const topPosts = await NewsModel.find({ date: { $gte: today.toLocaleDateString(), $lt: tomorrow.toLocaleDateString() } })
+            .sort({ views: -1 })
+            .limit(5);
+        return res.json(topPosts)
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 //HIỂN THỊ LƯỢT XEM
 async function loadViews(req: Request, res: Response) {
     const newsId = req.params.id;
@@ -241,6 +258,7 @@ export const News = {
     loadRandomNews,
     loadNews_Types,
     LoadNews_Tag,
+    LoadNews_Top5_ViewstoDay,
     loadViews,
     countViews,
     uploadImagesNews
