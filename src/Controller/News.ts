@@ -161,15 +161,38 @@ async function loadNews(req: Request, res: Response) {
 
 //HIỂN THỊ TẤT CẢ TIN TỨC
 async function loadAllNews(req: Request, res: Response) {
+    //hiển thị tất cả bài viết
+    // try {
+    //     const allNews = await NewsModel.find().select('title description avatar');
+    //     // return res.json(allNews)
+    //     res.render('listnews', { news: allNews });
+    // } catch (error) {
+    //     console.error(error);
+    //     res.status(500).json({ error: 'Internal server error' });
+    // }
+
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = 9;
+    const startIndex = (page - 1) * limit;
     try {
-        const allNews = await NewsModel.find().select('title description avatar');
-        return res.json(allNews)
-        // res.render('listnews', { news: allNews });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Internal server error' });
+        const users = await NewsModel.find().select('id title description avatar').skip(startIndex).limit(limit).exec();
+        const totalUsers = await NewsModel.countDocuments().exec();
+
+        const paginationResult = {
+            data: users,
+            total: totalUsers,
+            pages: Math.ceil(totalUsers / limit),
+            currentPage: page,
+            limit: limit,
+        };
+
+        // res.render('users', paginationResult);
+        res.json(paginationResult)
+    } catch (err) {
+        res.status(500).json({ message: 'Server Error' });
     }
 }
+
 //HIỂN THỊ NGẪU NHIÊN TIN TỨC
 async function loadRandomNews(req: Request, res: Response) {
     try {
@@ -225,6 +248,21 @@ async function LoadNews_Top5_ViewstoDay(req: Request, res: Response) {
     }
 }
 
+//HIỂN THỊ TOP 5 BÀI VIẾT MỚI NHẤT
+async function top5LatestNews(req: Request, res: Response) {
+    try {
+        const top5LatestNews = await NewsModel.find()
+            .sort({ date: -1 }) // Sắp xếp giảm dần theo trường "date"
+            .limit(5) // Giới hạn chỉ lấy 5 bài viết
+            .select('id title description avatar')
+            .exec();
+        res.json(top5LatestNews);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
 //HIỂN THỊ LƯỢT XEM
 async function loadViews(req: Request, res: Response) {
     const newsId = req.params.id;
@@ -259,6 +297,7 @@ export const News = {
     loadNews_Types,
     LoadNews_Tag,
     LoadNews_Top5_ViewstoDay,
+    top5LatestNews,
     loadViews,
     countViews,
     uploadImagesNews

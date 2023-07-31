@@ -5,9 +5,9 @@ import { midlleware_file } from "../middleware/file";
 
 const news_Router = express();
 
-news_Router.get('/createNews', News.get_CreateNews)
+news_Router.get('/createNews', midlleware_file, News.get_CreateNews)
 
-news_Router.post('/createNews', News.post_CreateNews)
+news_Router.post('/createNews', midlleware_file, News.post_CreateNews)
 
 news_Router.post('/updateNews/:id', News.updateNews)
 
@@ -20,6 +20,8 @@ news_Router.get('/AllNews', News.loadAllNews)
 news_Router.get('/randomNews', News.loadRandomNews)
 
 news_Router.get('/top5viewstoday', News.LoadNews_Top5_ViewstoDay)
+
+news_Router.get('/top5latestnews', News.top5LatestNews)
 
 news_Router.get('/typesNews/:id', News.loadNews_Types)//
 
