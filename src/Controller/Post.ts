@@ -3,7 +3,7 @@ import { PostModel } from "../Model/Post_Model";
 import unidecode from "unidecode";
 import CategoriesModel from "../Model/Categories_Model";
 import { v2 as cloudinary } from 'cloudinary';
-import { randomStringPost, deleteImageFromCloudinary, convertToSlug } from "../Services/sp";
+import { uploadImageToCloudinary, randomStringPost, deleteImageFromCloudinary, convertToSlug } from "../Services/sp";
 import fs from "fs";
 
 //UPLOAD HÌNH ẢNH LÊN CLOUDINARY KHI CHỌN HÌNH ẢNH TẠO BÀI VIẾT
@@ -49,9 +49,16 @@ async function createPost(req: Request, res: Response) {
         const description = req.body.description;
         const category = req.body.category;
         const content = req.body.content;
-        const linkfile = req.file?.filename;
+        const linkfile = req.file;
+
+        if (!linkfile) {
+            return res.status(400).json({ error: 'No image provided.' });
+        }
+
+        const thumbnailUrl = await uploadImageToCloudinary(linkfile)
+
         const Cate = await CategoriesModel.findOne({ name: category })
-        if (title == '' || description == '' || category == '' || content == '' || linkfile == '') {
+        if (title == '' || description == '' || category == '' || content == '') {
             deleteImageFromCloudinary(publicId)
             return res.json({ message: "Vui lòng điền đầy đủ thông tin" })
         }
@@ -73,7 +80,7 @@ async function createPost(req: Request, res: Response) {
             id: newIdPost,//Id Post
             title: title,
             description: description,
-            avatar: linkfile,
+            avatar: thumbnailUrl,
             content: content,
             // images: [publicId],
             username: "admindemo",
@@ -91,7 +98,14 @@ async function createPost(req: Request, res: Response) {
 async function updatePost(req: Request, res: Response) {
     const id = req.params.id;
     const { title, description, content, category } = req.body;
-    const linkfile = req.file?.filename;
+    const linkfile = req.file;
+
+    if (!linkfile) {
+        return res.status(400).json({ error: 'No image provided.' });
+    }
+
+    const thumbnailUrl = await uploadImageToCloudinary(linkfile)
+
     const Cate = await CategoriesModel.findOne({ name: category })
     // if (title == '' || description == '' || category == '' || content == '' || linkfile == '') {
     //     deleteImageFromCloudinary(publicId)
@@ -105,7 +119,7 @@ async function updatePost(req: Request, res: Response) {
         await PostModel.findOneAndUpdate({ id: id }, {
             title: title,
             description: description,
-            avatar: linkfile,
+            avatar: thumbnailUrl,
             content: content,
             categoryId: Cate.id
         })

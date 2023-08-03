@@ -5,7 +5,7 @@ import { midlleware_file } from "../middleware/file";
 
 const news_Router = express();
 
-news_Router.get('/createNews', midlleware_file, News.get_CreateNews)
+news_Router.get('/createNews', News.get_CreateNews)
 
 news_Router.post('/createNews', midlleware_file, News.post_CreateNews)
 

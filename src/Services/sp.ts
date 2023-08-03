@@ -15,6 +15,26 @@ function generateRandomStringPost() {
 }
 export const randomStringPost = generateRandomStringPost();
 
+// Hàm upload ảnh lên Cloudinary
+export async function uploadImageToCloudinary(image: Express.Multer.File) {
+    try {
+        if (!image) {
+            throw new Error('No image provided.');
+        }
+
+        // Upload ảnh lên Cloudinary
+        const result = await cloudinary.uploader.upload(image.path, {
+            folder: 'Tinhocnhuy', // Tên thư mục chứa các thumbnail trên Cloudinary
+            allowed_formats: ['jpg', 'jpeg', 'png', 'gif'],
+        });
+
+        // Trả về URL của ảnh đã upload
+        return result.secure_url;
+    } catch (error) {
+        throw new Error('Failed to upload image to Cloudinary.');
+    }
+}
+
 //HÀM XÓA HÌNH ẢNH ĐÃ UPLOAD LÊN COUDINARY
 export async function deleteImageFromCloudinary(publicId: string) {
     try {

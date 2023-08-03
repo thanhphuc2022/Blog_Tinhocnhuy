@@ -4,8 +4,9 @@ import unidecode from "unidecode";
 import { NewsModel } from "../Model/News_Models";
 import Types_News_Model from "../Model/Types_News_Models"
 import TagModel from "../Model/Tag_Models";
-import { deleteImageFromCloudinary, convertToSlug } from "../Services/sp"
+import { uploadImageToCloudinary, deleteImageFromCloudinary, convertToSlug } from "../Services/sp"
 import { v2 as cloudinary } from 'cloudinary';
+import { UploadedFile } from 'express-fileupload';
 import fs from "fs";
 
 //UPLOAD HÌNH ẢNH LÊN CLOUDINARY KHI CHỌN HÌNH ẢNH TẠO BÀI VIẾT
@@ -42,11 +43,18 @@ async function post_CreateNews(req: Request, res: Response) {
     try {
         const title = req.body.title;
         const description = req.body.description;
-        const linkfile = req.file?.filename;
+        const linkfile = req.file;
         const content = req.body.content;
         const nametypes = req.body.types;
         const tag = req.body.tag;
-        if (title == '' || description == '' || content == '' || linkfile == '' || linkfile == '' || nametypes == '') {
+
+        if (!linkfile) {
+            return res.status(400).json({ error: 'No image provided.' });
+        }
+
+        const thumbnailUrl = await uploadImageToCloudinary(linkfile);
+
+        if (title == '' || description == '' || content == '' || thumbnailUrl == '' || nametypes == '') {
             deleteImageFromCloudinary(publicId)
             return res.json({ message: "Vui lòng điền đầy đủ thông tin" })
         }
@@ -65,11 +73,12 @@ async function post_CreateNews(req: Request, res: Response) {
         } else {
             newIdNews = slug + '-' + randomStringPost
         }
+
         const newPost = await NewsModel.create({
             id: newIdNews,//Id Post
             title: title,
             description: description,
-            avatar: linkfile,
+            avatar: thumbnailUrl,
             content: content,
             username: "admindemo",
             typesid: types.id,
@@ -89,11 +98,18 @@ async function updateNews(req: Request, res: Response) {
     try {
         const id = req.params.id;
         const { title, description, content, nametypes, tag } = req.body;
-        const linkfile = req.file?.filename;
+        const linkfile = req.file;
         // if (title == '' || description == '' || content == '' || linkfile == '' || nametypes == '') {
         //     deleteImageFromCloudinary(publicId)
         //     return res.json({ message: "Vui lòng điền đầy đủ thông tin" })
         // }
+
+        if (!linkfile) {
+            return res.status(400).json({ error: 'No image provided.' });
+        }
+
+        const thumbnailUrl = await uploadImageToCloudinary(linkfile);
+
         const types = await Types_News_Model.findOne({ name: nametypes })
         if (!types) {
             deleteImageFromCloudinary(publicId)
@@ -108,7 +124,7 @@ async function updateNews(req: Request, res: Response) {
             await NewsModel.findOneAndUpdate({ id: id }, {
                 title: title,
                 description: description,
-                avatar: linkfile,
+                avatar: thumbnailUrl,
                 content: content,
                 typesid: types.id,
                 tag: tag
@@ -162,35 +178,35 @@ async function loadNews(req: Request, res: Response) {
 //HIỂN THỊ TẤT CẢ TIN TỨC
 async function loadAllNews(req: Request, res: Response) {
     //hiển thị tất cả bài viết
-    // try {
-    //     const allNews = await NewsModel.find().select('title description avatar');
-    //     // return res.json(allNews)
-    //     res.render('listnews', { news: allNews });
-    // } catch (error) {
-    //     console.error(error);
-    //     res.status(500).json({ error: 'Internal server error' });
-    // }
-
-    const page = parseInt(req.query.page as string) || 1;
-    const limit = 9;
-    const startIndex = (page - 1) * limit;
     try {
-        const users = await NewsModel.find().select('id title description avatar').skip(startIndex).limit(limit).exec();
-        const totalUsers = await NewsModel.countDocuments().exec();
-
-        const paginationResult = {
-            data: users,
-            total: totalUsers,
-            pages: Math.ceil(totalUsers / limit),
-            currentPage: page,
-            limit: limit,
-        };
-
-        // res.render('users', paginationResult);
-        res.json(paginationResult)
-    } catch (err) {
-        res.status(500).json({ message: 'Server Error' });
+        const allNews = await NewsModel.find().select('title description avatar');
+        // return res.json(allNews)
+        res.render('listnews', { news: allNews });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
     }
+
+    // const page = parseInt(req.query.page as string) || 1;
+    // const limit = 9;
+    // const startIndex = (page - 1) * limit;
+    // try {
+    //     const users = await NewsModel.find().select('id title description avatar').skip(startIndex).limit(limit).exec();
+    //     const totalUsers = await NewsModel.countDocuments().exec();
+
+    //     const paginationResult = {
+    //         data: users,
+    //         total: totalUsers,
+    //         pages: Math.ceil(totalUsers / limit),
+    //         currentPage: page,
+    //         limit: limit,
+    //     };
+
+    //     // res.render('users', paginationResult);
+    //     res.json(paginationResult)
+    // } catch (err) {
+    //     res.status(500).json({ message: 'Server Error' });
+    // }
 }
 
 //HIỂN THỊ NGẪU NHIÊN TIN TỨC
