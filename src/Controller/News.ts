@@ -178,35 +178,35 @@ async function loadNews(req: Request, res: Response) {
 //HIỂN THỊ TẤT CẢ TIN TỨC
 async function loadAllNews(req: Request, res: Response) {
     //hiển thị tất cả bài viết
-    try {
-        const allNews = await NewsModel.find().select('title description avatar');
-        // return res.json(allNews)
-        res.render('listnews', { news: allNews });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-
-    // const page = parseInt(req.query.page as string) || 1;
-    // const limit = 9;
-    // const startIndex = (page - 1) * limit;
     // try {
-    //     const users = await NewsModel.find().select('id title description avatar').skip(startIndex).limit(limit).exec();
-    //     const totalUsers = await NewsModel.countDocuments().exec();
-
-    //     const paginationResult = {
-    //         data: users,
-    //         total: totalUsers,
-    //         pages: Math.ceil(totalUsers / limit),
-    //         currentPage: page,
-    //         limit: limit,
-    //     };
-
-    //     // res.render('users', paginationResult);
-    //     res.json(paginationResult)
-    // } catch (err) {
-    //     res.status(500).json({ message: 'Server Error' });
+    //     const allNews = await NewsModel.find().select('title description avatar');
+    //     // return res.json(allNews)
+    //     res.render('listnews', { news: allNews });
+    // } catch (error) {
+    //     console.error(error);
+    //     res.status(500).json({ error: 'Internal server error' });
     // }
+
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = 9;
+    const startIndex = (page - 1) * limit;
+    try {
+        const users = await NewsModel.find().select('id title description avatar').skip(startIndex).limit(limit).exec();
+        const totalUsers = await NewsModel.countDocuments().exec();
+
+        const paginationResult = {
+            data: users,
+            total: totalUsers,
+            pages: Math.ceil(totalUsers / limit),
+            currentPage: page,
+            limit: limit,
+        };
+
+        // res.render('users', paginationResult);
+        res.json(paginationResult)
+    } catch (err) {
+        res.status(500).json({ message: 'Server Error' });
+    }
 }
 
 //HIỂN THỊ NGẪU NHIÊN TIN TỨC
