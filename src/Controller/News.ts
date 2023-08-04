@@ -40,6 +40,7 @@ async function get_CreateNews(req: Request, res: Response) {
 }
 
 async function post_CreateNews(req: Request, res: Response) {
+    let thumbnailUrl: string | null = null;
     try {
         const title = req.body.title;
         const description = req.body.description;
@@ -48,16 +49,17 @@ async function post_CreateNews(req: Request, res: Response) {
         const nametypes = req.body.types;
         const tag = req.body.tag;
 
+        if (title == '' || description == '' || content == '' || nametypes == '') {
+            deleteImageFromCloudinary(publicId)
+            return res.json({ message: "Vui lòng điền đầy đủ thông tin" })
+        }
+
         if (!linkfile) {
             return res.status(400).json({ error: 'No image provided.' });
         }
 
-        const thumbnailUrl = await uploadImageToCloudinary(linkfile);
+        thumbnailUrl = await uploadImageToCloudinary(linkfile);
 
-        if (title == '' || description == '' || content == '' || thumbnailUrl == '' || nametypes == '') {
-            deleteImageFromCloudinary(publicId)
-            return res.json({ message: "Vui lòng điền đầy đủ thông tin" })
-        }
         const types = await Types_News_Model.findOne({ name: nametypes })
         if (!types) {
             deleteImageFromCloudinary(publicId)
@@ -156,6 +158,15 @@ async function deleteNews(req: Request, res: Response) {
                 }
             }));
         }
+
+        const idthumnail = post?.avatar
+        if (idthumnail) {
+            const urlObject = new URL(idthumnail);
+            const path = urlObject.pathname;
+            const idImage = path.substring(path.indexOf('Tinhocnhuy/'), path.lastIndexOf('.'));
+            deleteImageFromCloudinary(idImage)
+        }
+
         await NewsModel.deleteOne({ id: id });
         return res.json({ message: "Đã xóa bài viết" });
     } catch (error) {

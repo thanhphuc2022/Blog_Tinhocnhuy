@@ -44,6 +44,7 @@ async function post(req: Request, res: Response) {
 
 //POST THÊM BÀI VIẾT
 async function createPost(req: Request, res: Response) {
+    let thumbnailUrl: string | null = null;
     try {
         const title = req.body.title;
         const description = req.body.description;
@@ -51,17 +52,17 @@ async function createPost(req: Request, res: Response) {
         const content = req.body.content;
         const linkfile = req.file;
 
-        if (!linkfile) {
-            return res.status(400).json({ error: 'No image provided.' });
-        }
-
-        const thumbnailUrl = await uploadImageToCloudinary(linkfile)
-
-        const Cate = await CategoriesModel.findOne({ name: category })
         if (title == '' || description == '' || category == '' || content == '') {
             deleteImageFromCloudinary(publicId)
             return res.json({ message: "Vui lòng điền đầy đủ thông tin" })
         }
+
+        if (!linkfile) {
+            return res.status(400).json({ error: 'No image provided.' });
+        }
+        thumbnailUrl = await uploadImageToCloudinary(linkfile)
+
+        const Cate = await CategoriesModel.findOne({ name: category })
         if (!Cate) {
             deleteImageFromCloudinary(publicId)
             return res.json({ message: "Không tìm thấy Danh mục" })
@@ -149,6 +150,14 @@ async function deletePost(req: Request, res: Response) {
                 }
             }));
         }
+        const idthumnail = post?.avatar
+        if (idthumnail) {
+            const urlObject = new URL(idthumnail);
+            const path = urlObject.pathname;
+            const idImage = path.substring(path.indexOf('Tinhocnhuy/'), path.lastIndexOf('.'));
+            deleteImageFromCloudinary(idImage)
+        }
+
         await PostModel.deleteOne({ id: id });
         return res.json({ message: "Đã xóa bài viết" });
     } catch (error) {
