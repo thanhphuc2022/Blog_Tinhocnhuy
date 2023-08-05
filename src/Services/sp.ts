@@ -25,7 +25,7 @@ export async function uploadImageToCloudinary(image: Express.Multer.File) {
         // Upload ảnh lên Cloudinary
         const result = await cloudinary.uploader.upload(image.path, {
             folder: 'Tinhocnhuy', // Tên thư mục chứa các thumbnail trên Cloudinary
-            allowed_formats: ['jpg', 'jpeg', 'png', 'gif'],
+            allowed_formats: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
         });
 
         // Trả về URL của ảnh đã upload

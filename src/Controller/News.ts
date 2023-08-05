@@ -6,7 +6,6 @@ import Types_News_Model from "../Model/Types_News_Models"
 import TagModel from "../Model/Tag_Models";
 import { uploadImageToCloudinary, deleteImageFromCloudinary, convertToSlug } from "../Services/sp"
 import { v2 as cloudinary } from 'cloudinary';
-import { UploadedFile } from 'express-fileupload';
 import fs from "fs";
 
 //UPLOAD HÌNH ẢNH LÊN CLOUDINARY KHI CHỌN HÌNH ẢNH TẠO BÀI VIẾT
@@ -87,6 +86,15 @@ async function post_CreateNews(req: Request, res: Response) {
             tag: tag
         });
         // return res.json(newPost);
+
+        fs.unlink(linkfile.path, (err) => {
+            if (err) {
+                console.error('Error deleting uploaded file:', err);
+            } else {
+                console.log('Uploaded file deleted:', linkfile.path);
+            }
+        });
+
         return res.json({ message: "Thêm thành công" })
     } catch (error) {
         deleteImageFromCloudinary(publicId)
