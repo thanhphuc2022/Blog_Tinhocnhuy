@@ -210,13 +210,13 @@ async function loadAllNews(req: Request, res: Response) {
     const limit = 9;
     const startIndex = (page - 1) * limit;
     try {
-        const users = await NewsModel.find().select('id title description avatar').skip(startIndex).limit(limit).exec();
-        const totalUsers = await NewsModel.countDocuments().exec();
+        const news = await NewsModel.find().select('id title description avatar date').skip(startIndex).limit(limit).exec();
+        const totalNews = await NewsModel.countDocuments().exec();
 
         const paginationResult = {
-            data: users,
-            total: totalUsers,
-            pages: Math.ceil(totalUsers / limit),
+            data: news,
+            total: totalNews,
+            pages: Math.ceil(totalNews / limit),
             currentPage: page,
             limit: limit,
         };
