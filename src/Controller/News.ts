@@ -289,7 +289,7 @@ async function top5LatestNews(req: Request, res: Response) {
         const top5LatestNews = await NewsModel.find()
             .sort({ date: -1 }) // Sắp xếp giảm dần theo trường "date"
             .limit(5) // Giới hạn chỉ lấy 5 bài viết
-            .select('id title description avatar')
+            .select('id title description avatar date')
             .exec();
         res.json(top5LatestNews);
     } catch (error) {
