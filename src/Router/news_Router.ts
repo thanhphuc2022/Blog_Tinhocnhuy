@@ -7,7 +7,7 @@ const news_Router = express();
 
 news_Router.get('/createNews', News.get_CreateNews)
 
-news_Router.post('/createNews', midlleware_file, News.post_CreateNews)
+news_Router.post('/createNews', middleware, midlleware_file, News.post_CreateNews)
 
 news_Router.post('/updateNews/:id', News.updateNews)
 

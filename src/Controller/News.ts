@@ -81,7 +81,7 @@ async function post_CreateNews(req: Request, res: Response) {
             description: description,
             avatar: thumbnailUrl,
             content: content,
-            username: "admindemo",
+            username: req.userId,
             typesid: types.id,
             tag: tag
         });

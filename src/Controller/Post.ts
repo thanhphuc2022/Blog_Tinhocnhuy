@@ -5,6 +5,7 @@ import CategoriesModel from "../Model/Categories_Model";
 import { v2 as cloudinary } from 'cloudinary';
 import { uploadImageToCloudinary, randomStringPost, deleteImageFromCloudinary, convertToSlug } from "../Services/sp";
 import fs from "fs";
+import { userInfo } from "os";
 
 //UPLOAD HÌNH ẢNH LÊN CLOUDINARY KHI CHỌN HÌNH ẢNH TẠO BÀI VIẾT
 var publicId: any;
@@ -84,7 +85,7 @@ async function createPost(req: Request, res: Response) {
             avatar: thumbnailUrl,
             content: content,
             // images: [publicId],
-            username: "admindemo",
+            username: req.userId,
             categoryId: Cate.id,
         });
         return res.json({ message: "Đã thêm bài viết" });

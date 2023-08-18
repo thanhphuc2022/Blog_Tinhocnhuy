@@ -121,6 +121,7 @@ async function login(req: Request, res: Response) {
                 { $set: { refreshtoken: refreshtoken } }
             )
             authorization = username
+            // console.log("id:=====" + req.userId + "==" + authorization)
             return res.json({ message: "Đăng nhập thành công", accesstoken, refreshtoken })
         }
     }
