@@ -57,7 +57,7 @@ async function post_CreateNews(req: Request, res: Response) {
             return res.status(400).json({ error: 'No image provided.' });
         }
 
-        thumbnailUrl = await uploadImageToCloudinary(linkfile);
+        // thumbnailUrl = await uploadImageToCloudinary(linkfile);
 
         const types = await Types_News_Model.findOne({ name: nametypes })
         if (!types) {
@@ -74,7 +74,7 @@ async function post_CreateNews(req: Request, res: Response) {
         } else {
             newIdNews = slug + '-' + randomStringPost
         }
-
+        thumbnailUrl = await uploadImageToCloudinary(linkfile);
         const newPost = await NewsModel.create({
             id: newIdNews,//Id Post
             title: title,
@@ -82,6 +82,7 @@ async function post_CreateNews(req: Request, res: Response) {
             avatar: thumbnailUrl,
             content: content,
             username: req.userId,
+            // username: "admindemo",
             typesid: types.id,
             tag: tag
         });
@@ -152,11 +153,11 @@ async function deleteNews(req: Request, res: Response) {
     const id = req.params.id;
     try {
         const post = await NewsModel.findOne({ id: id });
-        const imageRegex = /<img src="([^"]+)"/g;
+        const imageRegex = /src="([^"]+)"/g;
         const imageUrlMatches = post?.content.match(imageRegex);
         if (imageUrlMatches) {
             await Promise.all(imageUrlMatches.map(async (imageUrlMatch) => {
-                const imageUrl = imageUrlMatch.match(/<img src="([^"]+)"/)?.[1];
+                const imageUrl = imageUrlMatch.match(/src="([^"]+)"/)?.[1];
                 if (imageUrl) {
                     const urlObject = new URL(imageUrl);
                     const path = urlObject.pathname;

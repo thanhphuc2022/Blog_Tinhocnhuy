@@ -5,7 +5,6 @@ import CategoriesModel from "../Model/Categories_Model";
 import { v2 as cloudinary } from 'cloudinary';
 import { uploadImageToCloudinary, randomStringPost, deleteImageFromCloudinary, convertToSlug } from "../Services/sp";
 import fs from "fs";
-import { userInfo } from "os";
 
 //UPLOAD HÌNH ẢNH LÊN CLOUDINARY KHI CHỌN HÌNH ẢNH TẠO BÀI VIẾT
 var publicId: any;
@@ -61,7 +60,8 @@ async function createPost(req: Request, res: Response) {
         if (!linkfile) {
             return res.status(400).json({ error: 'No image provided.' });
         }
-        thumbnailUrl = await uploadImageToCloudinary(linkfile)
+
+        // thumbnailUrl = await uploadImageToCloudinary(linkfile)
 
         const Cate = await CategoriesModel.findOne({ name: category })
         if (!Cate) {
@@ -78,6 +78,8 @@ async function createPost(req: Request, res: Response) {
         } else {
             newIdPost = slug + '-' + randomStringPost
         }
+        thumbnailUrl = await uploadImageToCloudinary(linkfile)
+
         const newPost = await PostModel.create({
             id: newIdPost,//Id Post
             title: title,
@@ -85,7 +87,8 @@ async function createPost(req: Request, res: Response) {
             avatar: thumbnailUrl,
             content: content,
             // images: [publicId],
-            username: req.userId,
+            // username: req.userId,
+            username: "admindemo",
             categoryId: Cate.id,
         });
         return res.json({ message: "Đã thêm bài viết" });
@@ -137,11 +140,11 @@ async function deletePost(req: Request, res: Response) {
     const id = req.params.id;
     try {
         const post = await PostModel.findOne({ id: id });
-        const imageRegex = /<img src="([^"]+)"/g;
+        const imageRegex = /src="([^"]+)"/g;
         const imageUrlMatches = post?.content.match(imageRegex);
         if (imageUrlMatches) {
             await Promise.all(imageUrlMatches.map(async (imageUrlMatch) => {
-                const imageUrl = imageUrlMatch.match(/<img src="([^"]+)"/)?.[1];
+                const imageUrl = imageUrlMatch.match(/src="([^"]+)"/)?.[1];
                 if (imageUrl) {
                     const urlObject = new URL(imageUrl);
                     const path = urlObject.pathname;
