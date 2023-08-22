@@ -91,6 +91,15 @@ async function createPost(req: Request, res: Response) {
             username: "admindemo",
             categoryId: Cate.id,
         });
+
+        fs.unlink(linkfile.path, (err) => {
+            if (err) {
+                console.error('Error deleting uploaded file:', err);
+            } else {
+                console.log('Uploaded file deleted:', linkfile.path);
+            }
+        });
+
         return res.json({ message: "Đã thêm bài viết" });
     } catch (err) {
         deleteImageFromCloudinary(publicId)
