@@ -284,6 +284,18 @@ async function LoadNews_Top5_ViewstoDay(req: Request, res: Response) {
     }
 }
 
+//HIỂN THỊ TOP 5 BÀI VIẾT CÓ LƯỢT XEM NHIỀU NHẤT TỪ TRƯỚC TỚI NAY
+async function Top5Views(req: Request, res: Response) {
+    try {
+        const topPosts = await NewsModel.find()
+            .sort({ views: -1 })
+            .limit(5);
+        return res.json(topPosts);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 //HIỂN THỊ TOP 5 BÀI VIẾT MỚI NHẤT
 async function top5LatestNews(req: Request, res: Response) {
     try {
@@ -333,6 +345,7 @@ export const News = {
     loadNews_Types,
     LoadNews_Tag,
     LoadNews_Top5_ViewstoDay,
+    Top5Views,
     top5LatestNews,
     loadViews,
     countViews,

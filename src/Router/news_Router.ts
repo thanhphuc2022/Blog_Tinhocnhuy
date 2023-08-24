@@ -21,6 +21,8 @@ news_Router.get('/randomNews', News.loadRandomNews)
 
 news_Router.get('/top5viewstoday', News.LoadNews_Top5_ViewstoDay)
 
+news_Router.get('/top5views', News.Top5Views)
+
 news_Router.get('/top5latestnews', News.top5LatestNews)
 
 news_Router.get('/typesNews/:id', News.loadNews_Types)//
