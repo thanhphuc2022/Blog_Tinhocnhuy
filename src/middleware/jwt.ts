@@ -33,6 +33,25 @@ export const middleware = function authenticateToken(req: Request, res: Response
     }
 }
 
+export function checkToken(req: Request, res: Response, next: NextFunction) {
+    const authHeader = req.headers.authorization;
+    const token = authHeader && authHeader.split(" ")[1];
+
+    if (token) {
+        try {
+            const decodedToken = jwt.verify(token, CONFIG.jwt.access) as AuthTokenPayload;
+            req.userId = decodedToken.user;
+
+            // Token hợp lệ, trả về true
+            return res.json(true);
+        } catch (err) {
+            console.error("Error verifying token:", err); // Ghi log lỗi để kiểm tra
+        }
+    }
+
+    // Token không hợp lệ hoặc không tồn tại, trả về false
+    return res.json(false);
+}
 
 //Tìm refreshtoken trong csdl
 function findRefreshToken(refreshToken: string): Promise<JwtPayload | null> {
@@ -45,7 +64,7 @@ export async function requestRefreshToken(req: Request, res: Response,) {
     const authHeader = req.headers.authorization;
     const refreshToken = authHeader && authHeader.split(" ")[1];
     if (!refreshToken) {
-        return res.status(401).json({ message: 'Missing refresh token.' });
+        return res.status(401).json({ message: 'Token không tồn tại.' });
     }
     try {
         const decodedToken = jwt.verify(refreshToken, CONFIG.jwt.refresh) as { user: any };
@@ -57,7 +76,7 @@ export async function requestRefreshToken(req: Request, res: Response,) {
         const refreshtokendoc = await findRefreshToken(refreshToken);
         // Kiểm tra xem refreshtoken có tồn tại trong cơ sở dữ liệu hay không
         if (!refreshtokendoc) {
-            return res.status(401).json({ message: 'Invalid refresh token.' });
+            return res.status(401).json({ message: 'Token không tồn tại.' });
         }
         // Tạo access token mới dựa trên thông tin người dùng từ refreshtoken
         const new_accessToken = generateAccessToken(decodedToken.user);

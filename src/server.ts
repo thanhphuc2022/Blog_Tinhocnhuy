@@ -3,6 +3,7 @@ import session from 'express-session';
 import cookieParser from 'cookie-parser';
 import mongoose from "mongoose";
 import { CONFIG } from "./config/config";
+import token_Router from "./Router/token_Router";
 import auth_Router from "./Router/auth_Router";
 import post_Router from "./Router/post_Router";
 import news_Router from "./Router/news_Router";
@@ -148,6 +149,9 @@ app.get('/', function (req: Request, res: Response) {
     // uploadgg()
     res.json("Trang này của tao")
 })
+
+//token
+app.use('/api', token_Router);
 //auth
 app.use('/api', auth_Router);
 //post
