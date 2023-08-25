@@ -7,6 +7,7 @@ interface News extends Document {
     avatar: string,
     content: string,
     username: string,
+    // Account: Object,
     views: number,
     date: string,
     typesid: string,
@@ -20,6 +21,7 @@ const newsSchema: Schema = new Schema<News>({
     avatar: { type: String, required: true, },
     content: { type: String, required: true, },
     username: { type: String, required: true, },
+    // Account: { type: Schema.Types.ObjectId, ref: 'Accounts', required: true }, // Thêm trường account
     views: { type: Number, default: 0, },
     date: { type: String, default: () => new Date().toLocaleDateString() },
     typesid: { type: String, ref: 'Types_News', required: true },

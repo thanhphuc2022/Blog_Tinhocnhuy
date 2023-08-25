@@ -83,6 +83,7 @@ async function post_CreateNews(req: Request, res: Response) {
             content: content,
             username: req.userId,
             // username: "admindemo",
+            // account: accountId,
             typesid: types.id,
             tag: tag
         });
@@ -211,7 +212,7 @@ async function loadAllNews(req: Request, res: Response) {
     const limit = 9;
     const startIndex = (page - 1) * limit;
     try {
-        const news = await NewsModel.find().select('id title description avatar date').skip(startIndex).limit(limit).exec();
+        const news = await NewsModel.find().select('id title description avatar date views username').skip(startIndex).limit(limit).exec();
         const totalNews = await NewsModel.countDocuments().exec();
 
         const paginationResult = {
