@@ -74,7 +74,7 @@ async function loadCategories(req: Request, res: Response) {
 async function loadAllCategories(req: Request, res: Response) {
     try {
         //load name
-        const allCategories = await CategoriesModel.find({}, 'name');
+        const allCategories = await CategoriesModel.find({});
         //load all
         // const allCategories = await CategoriesModel.find();
         return res.json(allCategories);
