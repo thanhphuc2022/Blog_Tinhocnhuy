@@ -28,12 +28,13 @@ async function deleteTag(req: Request, res: Response) {
     }
 }
 
-async function loadAllTag(res: Response) {
+async function loadAllTag(req: Request, res: Response) {
     try {
-        const AllTag = await TagModel.find({}, 'name');
+        const AllTag = await TagModel.find({});
         return res.json(AllTag);
     } catch (error) {
         return res.status(500).json(error)
+        // return res.json(error)
     }
 }
 
