@@ -66,7 +66,7 @@ async function loadTypes_News(req: Request, res: Response) {
 async function loadAllType_News(req: Request, res: Response) {
     try {
         //load name
-        const allType = await Types_News_Model.find({}, 'name');
+        const allType = await Types_News_Model.find({});
         //load all
         // const allCategories = await CategoriesModel.find();
         return res.json(allType);

@@ -34,7 +34,6 @@ async function loadAllTag(req: Request, res: Response) {
         return res.json(AllTag);
     } catch (error) {
         return res.status(500).json(error)
-        // return res.json(error)
     }
 }
 
