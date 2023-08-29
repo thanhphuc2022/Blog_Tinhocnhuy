@@ -8,7 +8,7 @@ import fs from "fs";
 
 //UPLOAD HÌNH ẢNH LÊN CLOUDINARY KHI CHỌN HÌNH ẢNH TẠO BÀI VIẾT
 var publicId: any;
-async function uploadImagesPost(req: Request, res: Response) {
+async function uploadImagesPost2(req: Request, res: Response) {
     const file = req.file?.path;
     if (!file) {
         console.error('No file uploaded');
@@ -36,10 +36,40 @@ async function uploadImagesPost(req: Request, res: Response) {
     }
 }
 
+export async function uploadImagesPost(req: Request, res: Response) {
+    const fileBuffer = req.file?.buffer;
+    if (!fileBuffer) {
+        console.error('No file uploaded');
+        return res.status(400).json({ message: 'No file uploaded' });
+    }
+    try {
+        const result = await cloudinary.uploader.upload_stream({ resource_type: 'auto', folder: 'Tinhocnhuy' },
+            async (error, result) => {
+                if (error) {
+                    console.error('Upload failed:', error);
+                    return res.status(500).json({ error: 'Upload failed' });
+                }
+                if (result) { // Kiểm tra result có giá trị không
+                    console.log('Upload success:', result);
+                    res.json({ location: result.secure_url });
+                    publicId = result.public_id
+                }
+            }
+        ).end(fileBuffer);
+    } catch (err) {
+        console.error('Upload error:', err);
+        res.status(500).json({ error: 'Upload failed:' + err });
+    }
+}
+
 //GET THÊM BÀI VIẾT
 async function post(req: Request, res: Response) {
     // res.render('createpost')
     res.render('createpostLocal')
+}
+
+interface TempMulterFile extends Express.Multer.File {
+    buffer: Buffer;
 }
 
 //POST THÊM BÀI VIẾT
@@ -50,7 +80,7 @@ async function createPost(req: Request, res: Response) {
         const description = req.body.description;
         const category = req.body.category;
         const content = req.body.content;
-        const linkfile = req.file;
+        const linkfile = req.file as TempMulterFile;
 
         if (title == '' || description == '' || category == '' || content == '') {
             deleteImageFromCloudinary(publicId)
@@ -60,8 +90,6 @@ async function createPost(req: Request, res: Response) {
         if (!linkfile) {
             return res.status(400).json({ error: 'No image provided.' });
         }
-
-        // thumbnailUrl = await uploadImageToCloudinary(linkfile)
 
         const Cate = await CategoriesModel.findOne({ name: category })
         if (!Cate) {
@@ -92,13 +120,13 @@ async function createPost(req: Request, res: Response) {
             categoryId: Cate.id,
         });
 
-        fs.unlink(linkfile.path, (err) => {
-            if (err) {
-                console.error('Error deleting uploaded file:', err);
-            } else {
-                console.log('Uploaded file deleted:', linkfile.path);
-            }
-        });
+        // fs.unlink(linkfile.path, (err) => {
+        //     if (err) {
+        //         console.error('Error deleting uploaded file:', err);
+        //     } else {
+        //         console.log('Uploaded file deleted:', linkfile.path);
+        //     }
+        // });
 
         return res.json({ message: "Đã thêm bài viết" });
     } catch (err) {
@@ -112,7 +140,7 @@ async function createPost(req: Request, res: Response) {
 async function updatePost(req: Request, res: Response) {
     const id = req.params.id;
     const { title, description, content, category } = req.body;
-    const linkfile = req.file;
+    const linkfile = req.file as TempMulterFile;
 
     if (!linkfile) {
         return res.status(400).json({ error: 'No image provided.' });
