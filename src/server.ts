@@ -16,6 +16,9 @@ import fs from "fs";
 import { midlleware_file } from "./middleware/file";
 import { v2 as cloudinary } from 'cloudinary';
 
+import dotenv from 'dotenv';
+dotenv.config();
+
 import { google } from "googleapis";
 
 const date = new Date();
@@ -41,9 +44,9 @@ app.use(bodyParser.json());
 
 //KET NOI cloudinary/
 cloudinary.config({
-    cloud_name: CONFIG.cloudinary.cloud_name,
-    api_key: CONFIG.cloudinary.api_key,
-    api_secret: CONFIG.cloudinary.api_secret
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
 })
 // cloudinary.uploader.upload("https://upload.wikimedia.org/wikipedia/commons/a/ae/Olympic_flag.jpg",
 //     { public_id: "olympic_flag" },
