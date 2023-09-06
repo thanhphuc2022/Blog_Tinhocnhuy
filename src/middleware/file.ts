@@ -1,6 +1,6 @@
 import multer from "multer";
 import fs from "fs";
-// Cấu hình Multer để xử lý tải lên hình ảnh
+// Cấu hình Multer để xử lý tải lên hình ảnh dành cho lưu file vào fodel-lấy đường dẫn
 // const diskStorage = multer.diskStorage({
 //     destination: (req, file, callback) => {
 //         callback(null, "public/images");
@@ -18,6 +18,8 @@ import fs from "fs";
 //     }
 
 // });
+
+//// Cấu hình Multer để xử lý tải lên hình ảnh dành cho lấy dữ liệu từ bộ nhớ đệm
 const diskStorage = multer.memoryStorage();
 
 //midlleware xử lý lấy dữ liệu từ form 

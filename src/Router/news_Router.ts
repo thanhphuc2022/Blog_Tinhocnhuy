@@ -9,7 +9,7 @@ news_Router.get('/createNews', News.get_CreateNews)
 
 news_Router.post('/createNews', middleware, midlleware_file, News.post_CreateNews)
 
-news_Router.post('/updateNews/:id', News.updateNews)
+news_Router.post('/updateNews/:id', midlleware_file, News.updateNews)
 
 news_Router.post('/deleteNews/:id', News.deleteNews)
 

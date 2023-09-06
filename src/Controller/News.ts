@@ -136,6 +136,7 @@ async function post_CreateNews(req: Request, res: Response) {
 
 //CẬP NHẬT TIN TỨC
 async function updateNews(req: Request, res: Response) {
+    let thumbnailUrl: string | null = null;
     try {
         const id = req.params.id;
         const { title, description, content, nametypes, tag } = req.body;
@@ -149,29 +150,29 @@ async function updateNews(req: Request, res: Response) {
             return res.status(400).json({ error: 'No image provided.' });
         }
 
-        const thumbnailUrl = await uploadImageToCloudinary(linkfile);
-
         const types = await Types_News_Model.findOne({ name: nametypes })
         if (!types) {
             deleteImageFromCloudinary(publicId)
             return res.json({ message: "Không tìm thấy Loại tin tức" })
         }
-        const findtag = await TagModel.findOne({ name: tag })
-        if (!findtag) {
-            deleteImageFromCloudinary(publicId)
-            return res.json({ message: "Không tìm thấy Tag" })
-        }
-        else {
-            await NewsModel.findOneAndUpdate({ id: id }, {
-                title: title,
-                description: description,
-                avatar: thumbnailUrl,
-                content: content,
-                typesid: types.id,
-                tag: tag
-            })
-            return res.json({ message: "Cập nhật thành công" })
-        }
+        // const findtag = await TagModel.findOne({ name: tag })
+        // if (!findtag) {
+        //     deleteImageFromCloudinary(publicId)
+        //     return res.json({ message: "Không tìm thấy Tag" })
+        // }
+        // else {
+        // }
+        thumbnailUrl = await uploadImageToCloudinary(linkfile);
+        await NewsModel.findOneAndUpdate({ id: id }, {
+            title: title,
+            description: description,
+            avatar: thumbnailUrl,
+            content: content,
+            typesid: types.id,
+            tag: tag
+        })
+        return res.json({ message: "Cập nhật thành công" })
+
     } catch (error) {
         deleteImageFromCloudinary(publicId)
         return res.status(500).json(error)
