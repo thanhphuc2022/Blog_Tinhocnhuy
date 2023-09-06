@@ -139,7 +139,8 @@ async function updateNews(req: Request, res: Response) {
     let thumbnailUrl: string | null = null;
     try {
         const id = req.params.id;
-        const { title, description, content, nametypes, tag } = req.body;
+        const { title, description, content, tag } = req.body;
+        const nametypes = req.body.types;
         const linkfile = req.file as TempMulterFile;
         // if (title == '' || description == '' || content == '' || linkfile == '' || nametypes == '') {
         //     deleteImageFromCloudinary(publicId)
