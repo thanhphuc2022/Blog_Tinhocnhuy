@@ -146,9 +146,9 @@ async function updateNews(req: Request, res: Response) {
         //     return res.json({ message: "Vui lòng điền đầy đủ thông tin" })
         // }
 
-        if (!linkfile) {
-            return res.status(400).json({ error: 'No image provided.' });
-        }
+        // if (!linkfile) {
+        //     return res.status(400).json({ error: 'No image provided.' });
+        // }
 
         const types = await Types_News_Model.findOne({ name: nametypes })
         if (!types) {
@@ -162,17 +162,28 @@ async function updateNews(req: Request, res: Response) {
         // }
         // else {
         // }
-        thumbnailUrl = await uploadImageToCloudinary(linkfile);
-        await NewsModel.findOneAndUpdate({ id: id }, {
-            title: title,
-            description: description,
-            avatar: thumbnailUrl,
-            content: content,
-            typesid: types.id,
-            tag: tag
-        })
-        return res.json({ message: "Cập nhật thành công" })
 
+        if (!linkfile) {
+            await NewsModel.findOneAndUpdate({ id: id }, {
+                title: title,
+                description: description,
+                content: content,
+                typesid: types.id,
+                tag: tag
+            })
+            return res.json({ message: "Cập nhật thành công" })
+        } else {
+            thumbnailUrl = await uploadImageToCloudinary(linkfile);
+            await NewsModel.findOneAndUpdate({ id: id }, {
+                title: title,
+                description: description,
+                avatar: thumbnailUrl,
+                content: content,
+                typesid: types.id,
+                tag: tag
+            })
+            return res.json({ message: "Cập nhật thành công" })
+        }
     } catch (error) {
         deleteImageFromCloudinary(publicId)
         return res.status(500).json(error)
