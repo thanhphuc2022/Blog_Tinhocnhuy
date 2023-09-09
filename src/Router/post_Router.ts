@@ -15,6 +15,8 @@ post_Router.post('/deletePost/:id', middleware, Post.deletePost);
 
 post_Router.get('/loadPost', middleware, Post.loadPost_Username);
 
+post_Router.get('/AllPost', Post.loadAllPost);
+
 post_Router.get('/loadPostCategories/:id', Post.loadPost_Categories);
 
 post_Router.get('/bv/:id', Post.loadPost);

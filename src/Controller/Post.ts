@@ -218,6 +218,28 @@ async function loadPost(req: Request, res: Response) {
     }
 }
 
+//HIỂN THỊ TẤT CẢ BÀI VIẾT
+async function loadAllPost(req: Request, res: Response) {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = 9;
+    const startIndex = (page - 1) * limit;
+    try {
+        const posts = await PostModel.find().select('id title description avater date views username').skip(startIndex).limit(limit)
+        const totalPosts = await PostModel.countDocuments().exec();
+
+        const paginationResult = {
+            data: posts,
+            total: totalPosts,
+            pages: Math.ceil(totalPosts / limit),
+            currentPage: page,
+            limit: limit
+        }
+        res.json(paginationResult)
+    } catch (error) {
+        res.status(500).json({ message: 'Server Error' });
+    }
+}
+
 //TÌM KIẾM BÀI VIẾT THEO USERNAME
 async function loadPost_Username(req: Request, res: Response) {
     try {
@@ -271,9 +293,10 @@ export const Post = {
     updatePost,
     deletePost,
     loadPost,
+    loadAllPost,
     loadPost_Username,
     loadPost_Categories,
     loadViews,
     countViews,
-    uploadImagesPost
+    uploadImagesPost,
 }
