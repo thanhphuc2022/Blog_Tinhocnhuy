@@ -224,7 +224,7 @@ async function loadAllPost(req: Request, res: Response) {
     const limit = 9;
     const startIndex = (page - 1) * limit;
     try {
-        const posts = await PostModel.find().select('id title description avater date views username').skip(startIndex).limit(limit)
+        const posts = await PostModel.find().select('id title description avatar date views username').skip(startIndex).limit(limit)
         const totalPosts = await PostModel.countDocuments().exec();
 
         const paginationResult = {
