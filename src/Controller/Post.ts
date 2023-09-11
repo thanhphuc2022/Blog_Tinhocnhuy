@@ -138,34 +138,46 @@ async function createPost(req: Request, res: Response) {
 
 //CẬP NHẬT BÀI VIẾT
 async function updatePost(req: Request, res: Response) {
-    const id = req.params.id;
-    const { title, description, content, category } = req.body;
-    const linkfile = req.file as TempMulterFile;
-
-    if (!linkfile) {
-        return res.status(400).json({ error: 'No image provided.' });
-    }
-
-    const thumbnailUrl = await uploadImageToCloudinary(linkfile)
-
-    const Cate = await CategoriesModel.findOne({ name: category })
-    // if (title == '' || description == '' || category == '' || content == '' || linkfile == '') {
-    //     deleteImageFromCloudinary(publicId)
-    //     return res.json({ message: "Vui lòng điền đầy đủ thông tin" })
-    // }
-    if (!Cate) {
-        deleteImageFromCloudinary(publicId)
-        return res.json({ message: "Không tìm thấy Danh mục" })
-    }
+    let thumbnailUrl: string | null = null;
     try {
-        await PostModel.findOneAndUpdate({ id: id }, {
-            title: title,
-            description: description,
-            avatar: thumbnailUrl,
-            content: content,
-            categoryId: Cate.id
-        })
-        return res.json({ message: "Cập nhật thành công" })
+        const id = req.params.id;
+        const { title, description, content, category } = req.body;
+        const linkfile = req.file as TempMulterFile;
+
+        // if (!linkfile) {
+        //     return res.status(400).json({ error: 'No image provided.' });
+        // }
+
+        // if (title == '' || description == '' || category == '' || content == '' || linkfile == '') {
+        //     deleteImageFromCloudinary(publicId)
+        //     return res.json({ message: "Vui lòng điền đầy đủ thông tin" })
+        // }
+
+        const Cate = await CategoriesModel.findOne({ name: category })
+        if (!Cate) {
+            deleteImageFromCloudinary(publicId)
+            return res.json({ message: "Không tìm thấy Danh mục" })
+        }
+
+        if (!linkfile) {
+            await PostModel.findOneAndUpdate({ id: id }, {
+                title: title,
+                description: description,
+                content: content,
+                category: Cate.id,
+            })
+            return res.json({ message: "Cập nhật thành công" })
+        } else {
+            thumbnailUrl = await uploadImageToCloudinary(linkfile)
+            await PostModel.findOneAndUpdate({ id: id }, {
+                title: title,
+                description: description,
+                avatar: thumbnailUrl,
+                content: content,
+                categoryId: Cate.id
+            })
+            return res.json({ message: "Cập nhật thành công" })
+        }
     } catch (error) {
         deleteImageFromCloudinary(publicId)
         return res.status(500).json(error)
