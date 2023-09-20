@@ -299,6 +299,12 @@ const countViews = async (req: Request, res: Response) => {
     }
 }
 
+//ALL SLUG Post
+async function AllSlugPost(req: Request, res: Response) {
+    const post = await PostModel.find().select('id');
+    return res.json(post)
+}
+
 export const Post = {
     post,
     createPost,
@@ -310,5 +316,6 @@ export const Post = {
     loadPost_Categories,
     loadViews,
     countViews,
+    AllSlugPost,
     uploadImagesPost,
 }

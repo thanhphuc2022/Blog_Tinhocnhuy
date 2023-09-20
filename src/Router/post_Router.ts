@@ -25,6 +25,8 @@ post_Router.get('/post/:id', Post.loadViews);
 
 post_Router.get('/count/:id', Post.countViews);
 
+post_Router.get('/allslugpost', Post.AllSlugPost);
+
 //upload hình ảnh lên cloudinary , sử dụng cho Bài viết và Tin tức
 post_Router.post('/uploadimagesPost', midlleware_file, Post.uploadImagesPost);
 

@@ -378,6 +378,12 @@ async function countViews(req: Request, res: Response) {
     }
 }
 
+//ALLSLUGNEWS
+async function AllSlugNews(req: Request, res: Response) {
+    const news = await NewsModel.find().select('id');
+    return res.json(news);
+}
+
 export const News = {
     get_CreateNews,
     post_CreateNews,
@@ -393,5 +399,6 @@ export const News = {
     top5LatestNews,
     loadViews,
     countViews,
+    AllSlugNews,
     uploadImagesNews
 }

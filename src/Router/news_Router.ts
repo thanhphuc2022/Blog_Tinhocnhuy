@@ -33,6 +33,8 @@ news_Router.get('/viewsNews/:id', News.loadViews)
 
 news_Router.get('/countviewsNews/:id', News.countViews)
 
+news_Router.get('/allslugnews', News.AllSlugNews)
+
 //upload hình ảnh lên cloudinary , sử dụng cho Bài viết và Tin tức
 news_Router.post('/uploadimagesNews', midlleware_file, News.uploadImagesNews)
 
