@@ -9,7 +9,7 @@ categories_Router.post('/updateCategories/:id', middleware, Categories.updateCat
 
 categories_Router.post('/deleteCategories/:id', middleware, Categories.deleteCategories);
 
-categories_Router.get('/loadCategories', middleware, Categories.loadCategories);
+categories_Router.get('/loadCategories', Categories.loadCategories);
 
 categories_Router.get('/loadAllCategories', Categories.loadAllCategories);
 

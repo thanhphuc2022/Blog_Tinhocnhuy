@@ -7,13 +7,13 @@ const post_Router = express();
 
 post_Router.get('/createPost', Post.post);
 
-post_Router.post('/createPost', midlleware_file, Post.createPost);
+post_Router.post('/createPost', middleware, midlleware_file, Post.createPost);
 
-post_Router.post('/updatePost/:id', midlleware_file, Post.updatePost);
+post_Router.post('/updatePost/:id', middleware, midlleware_file, Post.updatePost);
 
-post_Router.post('/deletePost/:id', middleware, Post.deletePost);
+post_Router.post('/deletePost/:id', middleware, middleware, Post.deletePost);
 
-post_Router.get('/loadPost', middleware, Post.loadPost_Username);
+post_Router.get('/loadPost', Post.loadPost_Username);
 
 post_Router.get('/AllPost', Post.loadAllPost);
 
