@@ -276,6 +276,36 @@ async function loadPost_Categories(req: Request, res: Response) {
     }
 }
 
+//TOP 4 BÀI VIẾT THEO DICH VU
+async function top4_LoadPost_Dichvu(req: Request, res: Response) {
+    try {
+        const top5LatestPost = await PostModel.find({ categoryId: 'Dich-vu' })
+            .sort({ date: -1 })
+            .limit(4).
+            select('id title avatar')
+            .exec();
+        res.json(top5LatestPost);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+//TOP 4 BÀI VIẾT THEO GIAI PHAP
+async function top4_LoadPost_Giaiphap(req: Request, res: Response) {
+    try {
+        const top5LatestPost = await PostModel.find({ categoryId: 'Giai-phap' })
+            .sort({ date: -1 })
+            .limit(4).
+            select('id title avatar')
+            .exec();
+        res.json(top5LatestPost);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
 //HIỂN THỊ LƯỢT XEM
 async function loadViews(req: Request, res: Response) {
     const postId = req.params.id;
@@ -314,6 +344,8 @@ export const Post = {
     loadAllPost,
     loadPost_Username,
     loadPost_Categories,
+    top4_LoadPost_Dichvu,
+    top4_LoadPost_Giaiphap,
     loadViews,
     countViews,
     AllSlugPost,
