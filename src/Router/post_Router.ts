@@ -11,7 +11,7 @@ post_Router.post('/createPost', middleware, midlleware_file, Post.createPost);
 
 post_Router.post('/updatePost/:id', middleware, midlleware_file, Post.updatePost);
 
-post_Router.post('/deletePost/:id', middleware, middleware, Post.deletePost);
+post_Router.post('/deletePost/:id', middleware, Post.deletePost);
 
 post_Router.get('/loadPost', Post.loadPost_Username);
 
