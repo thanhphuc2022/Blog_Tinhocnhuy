@@ -55,34 +55,13 @@ cloudinary.config({
 // Sử dụng cookie-parser middleware
 app.use(cookieParser());
 // Xét session
-// app.use(
-//     session({
-//         secret: 'this-is-a-long-and-complex-secret-key',
-//         resave: false,
-//         saveUninitialized: true,
-//     })
-// );
-
-
-//-momery unleaked---------
-app.set('trust proxy', 1);
-
-app.use(session({
-    cookie: {
-        secure: true,
-        maxAge: 60000
-    },
-    secret: 'secret',
-    saveUninitialized: true,
-    resave: false
-}));
-
-app.use(function (req, res, next) {
-    if (!req.session) {
-        return next(new Error('Oh no')) //handle error
-    }
-    next() //otherwise continue
-});
+app.use(
+    session({
+        secret: 'this-is-a-long-and-complex-secret-key',
+        resave: false,
+        saveUninitialized: true,
+    })
+);
 
 // Add headers before the routes are defined
 app.use(function (req, res, next) {
