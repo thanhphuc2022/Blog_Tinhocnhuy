@@ -55,98 +55,34 @@ cloudinary.config({
 // Sử dụng cookie-parser middleware
 app.use(cookieParser());
 // Xét session
-app.use(
-    session({
-        secret: 'this-is-a-long-and-complex-secret-key',
-        resave: false,
-        saveUninitialized: true,
-    })
-);
-// const oauth2Client = new google.auth.OAuth2(CONFIG.google_drive.client_id, CONFIG.google_drive.client_secret, CONFIG.google_drive.redirect_uri);
-// const drive = google.drive({
-//     version: 'v3',
-//     auth: oauth2Client
-// })
-// // export const uploadgg = async () => {
-// //     try {
-// //         const createFile = await drive.files.create({
-// //             requestBody: {
-// //                 name: "demo.jpg",
-// //                 mimeType: 'image/jpg'
-// //             },
-// //             media: {
-// //                 mimeType: 'image/jpg',
-// //                 body: fs.createReadStream(path.join(__dirname, '../public/images/f1.jpg'))
-// //             }
-// //         })
-// //         console.log(createFile.data)
-// //     } catch (error) {
-// //         console.log(error)
-// //     }
-// // }
+// app.use(
+//     session({
+//         secret: 'this-is-a-long-and-complex-secret-key',
+//         resave: false,
+//         saveUninitialized: true,
+//     })
+// );
 
-// export const uploadGoogle = async () => {
-//     // try {
-//     //     const credentials = path.join(__dirname, '../googleapi.json')
-//     //     const auth = new google.auth.GoogleAuth({
-//     //         keyFile: credentials,
-//     //         scopes: ['https://www.googleapis.com/auth/drive']
-//     //     })
-//     //     const driveService = google.drive({
-//     //         version: 'v3',
-//     //         auth
-//     //     })
-//     //     const filedata = {
-//     //         name: 'f1.jpg',
-//     //         parents: [CONFIG.google_drive.folderid]
-//     //     }
-//     //     const media = {
-//     //         MimeType: 'image/jpg',
-//     //         body: fs.createReadStream(path.join(__dirname, '../public/images/f1.jpg'))
-//     //     }
-//     //     const response = await driveService.files.create({
-//     //         requestBody: filedata,
-//     //         media: media,
-//     //         fields: 'id'
 
-//     //     })
-//     //     return response.data.id
-//     // } catch (error) {
-//     //     console.log(error)
-//     // }
-// }
+//-momery unleaked---------
+app.set('trust proxy', 1);
 
-// // Configure Google Drive API credentials
-// const credentials = require(path.join(__dirname, '../googleapi.json'))
-// const auth = new google.auth.GoogleAuth({
-//     credentials,
-//     scopes: ['https://www.googleapis.com/auth/drive.file'],
-// });
+app.use(session({
+    cookie: {
+        secure: true,
+        maxAge: 60000
+    },
+    secret: 'secret',
+    saveUninitialized: true,
+    resave: false
+}));
 
-// export async function uploadgg() {
-//     // const { file } = req;
-//     const drive = google.drive({ version: 'v3', auth });
-//     const folderId = '1vNO2Q4EcnzhqAkid3OQUcs28UseEaj-5';
-
-//     try {
-//         const response = await drive.files.create({
-//             requestBody: {
-//                 name: 'f1.jpg',
-//                 mimeType: 'image/jpg',
-//                 parents: [folderId],
-//             },
-//             media: {
-//                 mimeType: 'image/jpg',
-//                 body: fs.createReadStream(path.join(__dirname, '../public/images/f1.jpg'))
-//             },
-//         });
-//         console.log({ fileId: response.data.id })
-//         // res.status(200).json({ fileId: response.data.id });
-//     } catch (error) {
-//         console.error('Error uploading file:', error);
-//         //   res.status(500).json({ error: 'Failed to upload file' });
-//     }
-// };
+app.use(function (req, res, next) {
+    if (!req.session) {
+        return next(new Error('Oh no')) //handle error
+    }
+    next() //otherwise continue
+});
 
 // Add headers before the routes are defined
 app.use(function (req, res, next) {
