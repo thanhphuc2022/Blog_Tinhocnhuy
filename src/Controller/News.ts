@@ -255,7 +255,7 @@ async function loadAllNews(req: Request, res: Response) {
     // const limit = parseInt(req.query.limit as string) || 10; //tùy chỉnh số lượng đối tượng trên 1 trang
     const startIndex = (page - 1) * limit;
     try {
-        const news = await NewsModel.find().select('id title description avatar date views username').skip(startIndex).limit(limit).exec();
+        const news = await NewsModel.find().select('id title description avatar date').skip(startIndex).limit(limit).exec();
         const totalNews = await NewsModel.countDocuments().exec();
 
         const paginationResult = {
