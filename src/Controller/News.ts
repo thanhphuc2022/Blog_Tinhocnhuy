@@ -240,22 +240,12 @@ async function loadNews(req: Request, res: Response) {
 
 //HIỂN THỊ TẤT CẢ TIN TỨC
 async function loadAllNews(req: Request, res: Response) {
-    //hiển thị tất cả bài viết
-    // try {
-    //     const allNews = await NewsModel.find().select('title description avatar');
-    //     // return res.json(allNews)
-    //     res.render('listnews', { news: allNews });
-    // } catch (error) {
-    //     console.error(error);
-    //     res.status(500).json({ error: 'Internal server error' });
-    // }
-
     const page = parseInt(req.query.page as string) || 1;
     const limit = 9;
     // const limit = parseInt(req.query.limit as string) || 10; //tùy chỉnh số lượng đối tượng trên 1 trang
     const startIndex = (page - 1) * limit;
     try {
-        const news = await NewsModel.find().select('id title description avatar date').skip(startIndex).limit(limit).exec();
+        const news = await NewsModel.find().select('id title description avatar date').lean().skip(startIndex).limit(limit).exec();
         const totalNews = await NewsModel.countDocuments().exec();
 
         const paginationResult = {
@@ -343,10 +333,15 @@ async function Top5Views(req: Request, res: Response) {
 //HIỂN THỊ TOP 5 BÀI VIẾT MỚI NHẤT
 async function top5LatestNews(req: Request, res: Response) {
     try {
-        const top5LatestNews = await NewsModel.find()
-            .sort({ date: -1 }) // Sắp xếp giảm dần theo trường "date"
-            .limit(5) // Giới hạn chỉ lấy 5 bài viết
-            .select('id title description avatar date')
+        // const top5LatestNews = await NewsModel.find()
+        //     .sort({ date: -1 }) // Sắp xếp giảm dần theo trường "date"
+        //     .limit(5) // Giới hạn chỉ lấy 5 bài viết
+        //     .select('id title description avatar date')
+        //     .exec();
+        const top5LatestNews = await NewsModel.find({}, 'id title description avatar date')
+            .sort({ date: -1 })
+            .limit(5)
+            .lean()
             .exec();
         res.json(top5LatestNews);
     } catch (error) {
