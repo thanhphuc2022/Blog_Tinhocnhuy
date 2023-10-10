@@ -338,7 +338,7 @@ async function AllSlugPost(req: Request, res: Response) {
 async function AllSlugPost_News(req: Request, res: Response) {
     const post = await PostModel.find({}, 'id');
     const news = await NewsModel.find({}, 'id');
-    return res.json(post + "================ " + news);
+    return res.json(post + "," + news);
 }
 
 export const Post = {
