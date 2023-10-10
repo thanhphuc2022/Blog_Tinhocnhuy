@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { PostModel } from "../Model/Post_Model";
-import unidecode from "unidecode";
 import CategoriesModel from "../Model/Categories_Model";
+import { NewsModel } from "../Model/News_Models";
 import { v2 as cloudinary } from 'cloudinary';
 import { uploadImageToCloudinary, randomStringPost, deleteImageFromCloudinary, convertToSlug } from "../Services/sp";
 import fs from "fs";
@@ -334,6 +334,12 @@ async function AllSlugPost(req: Request, res: Response) {
     const post = await PostModel.find().select('id');
     return res.json(post)
 }
+//ALL SLUG POST_NEW
+async function AllSlugPost_News(req: Request, res: Response) {
+    const post = await PostModel.find({}, 'id');
+    const news = await NewsModel.find({}, 'id');
+    return res.json(post + "================ " + news);
+}
 
 export const Post = {
     post,
@@ -349,5 +355,6 @@ export const Post = {
     loadViews,
     countViews,
     AllSlugPost,
+    AllSlugPost_News,
     uploadImagesPost,
 }
