@@ -281,8 +281,8 @@ async function top4_LoadPost_Dichvu(req: Request, res: Response) {
     try {
         const top5LatestPost = await PostModel.find({ categoryId: 'Dich-vu' })
             .sort({ date: -1 })
-            .limit(4).
-            select('id title avatar')
+            .limit(4)
+            .select('id title avatar')
             .exec();
         res.json(top5LatestPost);
     } catch (error) {
@@ -296,8 +296,8 @@ async function top4_LoadPost_Giaiphap(req: Request, res: Response) {
     try {
         const top5LatestPost = await PostModel.find({ categoryId: 'Giai-phap' })
             .sort({ date: -1 })
-            .limit(4).
-            select('id title avatar')
+            .limit(4)
+            .select('id title avatar')
             .exec();
         res.json(top5LatestPost);
     } catch (error) {

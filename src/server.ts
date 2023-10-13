@@ -53,15 +53,16 @@ cloudinary.config({
 //     function (error, result) { console.log(result); });
 
 // Sử dụng cookie-parser middleware
-app.use(cookieParser());
-// Xét session
-app.use(
-    session({
-        secret: 'this-is-a-long-and-complex-secret-key',
-        resave: false,
-        saveUninitialized: true,
-    })
-);
+
+// app.use(cookieParser());
+// // Xét session
+// app.use(
+//     session({
+//         secret: 'this-is-a-long-and-complex-secret-key',
+//         resave: false,
+//         saveUninitialized: true,
+//     })
+// );
 
 // Add headers before the routes are defined
 app.use(function (req, res, next) {
