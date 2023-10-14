@@ -294,7 +294,7 @@ async function loadNews_Types(req: Request, res: Response) {
 async function LoadNews_Tag(req: Request, res: Response) {
     const tagid = req.params.id
     try {
-        const tag = await NewsModel.find({ tag: tagid })
+        const tag = await NewsModel.find({ tag: tagid }).select('id title description avatar date').lean()
         return res.json(tag)
     } catch (error) {
         console.log(error)
