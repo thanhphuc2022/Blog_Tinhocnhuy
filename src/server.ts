@@ -1,6 +1,4 @@
 import express, { Request, Response } from "express";
-import session from 'express-session';
-import cookieParser from 'cookie-parser';
 import mongoose from "mongoose";
 import { CONFIG } from "./config/config";
 import token_Router from "./Router/token_Router";
@@ -12,8 +10,6 @@ import categories_Router from "./Router/categories_Router";
 import tag_Router from "./Router/tag_Router";
 import bodyParser from "body-parser";
 import path from "path";
-import fs from "fs";
-import { midlleware_file } from "./middleware/file";
 import { v2 as cloudinary } from 'cloudinary';
 
 import dotenv from 'dotenv';

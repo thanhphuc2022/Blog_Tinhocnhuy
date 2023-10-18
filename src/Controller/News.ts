@@ -1,9 +1,7 @@
 import { Request, Response } from "express";
 import { randomStringPost } from "../Services/sp";
-import unidecode from "unidecode";
 import { NewsModel } from "../Model/News_Models";
 import Types_News_Model from "../Model/Types_News_Models"
-import TagModel from "../Model/Tag_Models";
 import { uploadImageToCloudinary, deleteImageFromCloudinary, convertToSlug } from "../Services/sp"
 import { v2 as cloudinary } from 'cloudinary';
 import fs from "fs";
@@ -293,9 +291,22 @@ async function loadNews_Types(req: Request, res: Response) {
 //DANH SÁCH BÀI VIẾT THEO TAG
 async function LoadNews_Tag(req: Request, res: Response) {
     const tagid = req.params.id
+
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = 9;
+    const startIndex = (page - 1) * limit;
     try {
-        const tag = await NewsModel.find({ tag: tagid }).select('id title description avatar date').lean()
-        return res.json(tag)
+        const tag = await NewsModel.find({ tag: tagid }).select('id title description avatar date').lean().skip(startIndex).limit(limit).exec();
+        const totalPages = await NewsModel.countDocuments().exec();
+
+        const paginationResult = {
+            date: tag,
+            total: totalPages,
+            pages: Math.ceil(totalPages / limit),
+            currentPage: page,
+            limit: limit
+        };
+        return res.json(paginationResult)
     } catch (error) {
         console.log(error)
     }
