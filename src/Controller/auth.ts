@@ -194,7 +194,7 @@ async function changePassword(req: Request, res: Response) {
         err++
         res.status(500).json({ message: "Vui lòng nhập đầy đủ thông tin" })
     }
-    if (password !== renewpassword) {
+    if (newpassword != renewpassword) {
         err++
         res.status(500).json({ message: "Mật khẩu mới không khớp" })
     }
