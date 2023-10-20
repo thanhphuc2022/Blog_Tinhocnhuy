@@ -300,7 +300,7 @@ async function LoadNews_Tag(req: Request, res: Response) {
         const totalPages = await NewsModel.countDocuments().exec();
 
         const paginationResult = {
-            date: tag,
+            data: tag,
             total: totalPages,
             pages: Math.ceil(totalPages / limit),
             currentPage: page,
