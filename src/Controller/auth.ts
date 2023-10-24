@@ -245,5 +245,5 @@ export const auth = {
     post_ForgotPassword,
     changePassword,
     putAccount,
-    getUploadDemo,
+    // getUploadDemo,
 };
