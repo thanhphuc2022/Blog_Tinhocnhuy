@@ -128,7 +128,7 @@ async function createPost(req: Request, res: Response) {
         //     }
         // });
 
-        return res.json({ message: "Đã thêm bài viết" });
+        return res.json({ message: "Đã thêm bài viết", newIdPost});
     } catch (err) {
         deleteImageFromCloudinary(publicId)
         console.log(err);
@@ -166,7 +166,7 @@ async function updatePost(req: Request, res: Response) {
                 content: content,
                 category: Cate.id,
             })
-            return res.json({ message: "Cập nhật thành công" })
+            return res.json({ message: "Cập nhật thành công", id})
         } else {
             thumbnailUrl = await uploadImageToCloudinary(linkfile)
             await PostModel.findOneAndUpdate({ id: id }, {
@@ -176,7 +176,7 @@ async function updatePost(req: Request, res: Response) {
                 content: content,
                 categoryId: Cate.id
             })
-            return res.json({ message: "Cập nhật thành công" })
+            return res.json({ message: "Cập nhật thành công", id })
         }
     } catch (error) {
         deleteImageFromCloudinary(publicId)
@@ -212,7 +212,7 @@ async function deletePost(req: Request, res: Response) {
         }
 
         await PostModel.deleteOne({ id: id });
-        return res.json({ message: "Đã xóa bài viết" });
+        return res.json({ message: "Đã xóa bài viết", id });
     } catch (error) {
         res.status(500).json(error);
     }

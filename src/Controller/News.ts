@@ -124,7 +124,7 @@ async function post_CreateNews(req: Request, res: Response) {
         //     }
         // });
 
-        return res.json({ message: "Thêm thành công" })
+        return res.json({ message: "Thêm thành công", newIdNews})
     } catch (error) {
         deleteImageFromCloudinary(publicId)
         console.log(error);
@@ -170,7 +170,7 @@ async function updateNews(req: Request, res: Response) {
                 typesid: types.id,
                 tag: tag
             })
-            return res.json({ message: "Cập nhật thành công" })
+            return res.json({ message: "Cập nhật thành công", id})
         } else {
             thumbnailUrl = await uploadImageToCloudinary(linkfile);
             await NewsModel.findOneAndUpdate({ id: id }, {
@@ -181,7 +181,7 @@ async function updateNews(req: Request, res: Response) {
                 typesid: types.id,
                 tag: tag
             })
-            return res.json({ message: "Cập nhật thành công" })
+            return res.json({ message: "Cập nhật thành công", id})
         }
     } catch (error) {
         deleteImageFromCloudinary(publicId)
@@ -218,7 +218,7 @@ async function deleteNews(req: Request, res: Response) {
         }
 
         await NewsModel.deleteOne({ id: id });
-        return res.json({ message: "Đã xóa bài viết" });
+        return res.json({ message: "Đã xóa bài viết", id});
     } catch (error) {
         res.status(500).json(error);
     }
