@@ -29,7 +29,7 @@ async function createCategories(req: Request, res: Response) {
             id: newIdCategory,
             name: name
         })
-        return res.json({ message: "Tạo Danh Mục thành công" });
+        return res.json({ message: "Tạo Danh Mục thành công", newIdCategory});
     } catch (error) {
         res.json(error)
     }
@@ -43,7 +43,7 @@ async function updateCategories(req: Request, res: Response) {
         await CategoriesModel.findOneAndUpdate({ id: id }, {
             name: name
         })
-        return res.json({ message: "Cập nhật thành công" })
+        return res.json({ message: "Cập nhật thành công", id})
     } catch (error) {
         res.status(500).json(error)
     }
@@ -54,7 +54,7 @@ async function deleteCategories(req: Request, res: Response) {
     const id = req.params.id
     try {
         await CategoriesModel.findOneAndDelete({ id: id })
-        return res.json({ message: "Đã xóa danh mục" })
+        return res.json({ message: "Đã xóa danh mục", id})
     } catch (error) {
         return res.status(500).json(error)
     }

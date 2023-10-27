@@ -21,7 +21,7 @@ async function createTypes_News(req: Request, res: Response) {
             id: id,
             name: name
         })
-        return res.json({ message: 'Tạo danh mục bài viết thành công' })
+        return res.json({ message: 'Tạo danh mục bài viết thành công', id})
     } catch (error) {
         res.status(500).json(error)
     }
@@ -35,7 +35,7 @@ async function updateTypes_News(req: Request, res: Response) {
         await Types_News_Model.findOneAndUpdate({ id: id }, {
             name: name
         })
-        return res.json({ message: "Cập nhật thành công" })
+        return res.json({ message: "Cập nhật thành công", id})
     } catch (error) {
         res.status(500).json(error)
     }
@@ -46,7 +46,7 @@ async function deleteType_News(req: Request, res: Response) {
     const id = req.params.id
     try {
         await Types_News_Model.findOneAndDelete({ id: id })
-        return res.json({ message: "Đã xóa danh mục bài viết" })
+        return res.json({ message: "Đã xóa danh mục bài viết", id})
     } catch (error) {
         res.status(500).json(error)
     }
