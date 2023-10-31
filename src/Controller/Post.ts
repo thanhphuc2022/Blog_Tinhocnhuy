@@ -128,7 +128,7 @@ async function createPost(req: Request, res: Response) {
         //     }
         // });
 
-        return res.json({ message: "Đã thêm bài viết", newIdPost});
+        return res.json({ message: "Đã thêm bài viết", newIdPost });
     } catch (err) {
         deleteImageFromCloudinary(publicId)
         console.log(err);
@@ -166,7 +166,7 @@ async function updatePost(req: Request, res: Response) {
                 content: content,
                 category: Cate.id,
             })
-            return res.json({ message: "Cập nhật thành công", id})
+            return res.json({ message: "Cập nhật thành công", id })
         } else {
             thumbnailUrl = await uploadImageToCloudinary(linkfile)
             await PostModel.findOneAndUpdate({ id: id }, {
@@ -208,7 +208,7 @@ async function deletePost(req: Request, res: Response) {
             const urlObject = new URL(idthumnail);
             const path = urlObject.pathname;
             const idImage = path.substring(path.indexOf('Tinhocnhuy/'), path.lastIndexOf('.'));
-            deleteImageFromCloudinary(idImage)
+            await deleteImageFromCloudinary(idImage)
         }
 
         await PostModel.deleteOne({ id: id });
