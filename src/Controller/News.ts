@@ -124,7 +124,7 @@ async function post_CreateNews(req: Request, res: Response) {
         //     }
         // });
 
-        return res.json({ message: "Thêm thành công", newIdNews})
+        return res.json({ message: "Thêm thành công", newIdNews })
     } catch (error) {
         deleteImageFromCloudinary(publicId)
         console.log(error);
@@ -170,7 +170,7 @@ async function updateNews(req: Request, res: Response) {
                 typesid: types.id,
                 tag: tag
             })
-            return res.json({ message: "Cập nhật thành công", id})
+            return res.json({ message: "Cập nhật thành công", id })
         } else {
             thumbnailUrl = await uploadImageToCloudinary(linkfile);
             await NewsModel.findOneAndUpdate({ id: id }, {
@@ -181,7 +181,7 @@ async function updateNews(req: Request, res: Response) {
                 typesid: types.id,
                 tag: tag
             })
-            return res.json({ message: "Cập nhật thành công", id})
+            return res.json({ message: "Cập nhật thành công", id })
         }
     } catch (error) {
         deleteImageFromCloudinary(publicId)
@@ -191,9 +191,51 @@ async function updateNews(req: Request, res: Response) {
 
 //XÓA TIN TỨC
 async function deleteNews(req: Request, res: Response) {
+    // const id = req.params.id;
+    // try {
+    //     const post = await NewsModel.findOne({ id: id });
+    //     const imageRegex = /src="([^"]+)"/g;
+    //     const imageUrlMatches = post?.content.match(imageRegex);
+    //     if (imageUrlMatches) {
+    //         await Promise.all(imageUrlMatches.map(async (imageUrlMatch) => {
+    //             const imageUrl = imageUrlMatch.match(/src="([^"]+)"/)?.[1];
+    //             if (imageUrl) {
+    //                 const urlObject = new URL(imageUrl);
+    //                 const path = urlObject.pathname;
+    //                 const idImage = path.substring(path.indexOf('Tinhocnhuy/'), path.lastIndexOf('.'));
+    //                 console.log(idImage);
+    //                 await deleteImageFromCloudinary(idImage);
+    //             }
+    //         }));
+    //     }
+
+    //     const idthumnail = post?.avatar
+    //     if (idthumnail) {
+    //         const urlObject = new URL(idthumnail);
+    //         const path = urlObject.pathname;
+    //         const idImage = path.substring(path.indexOf('Tinhocnhuy/'), path.lastIndexOf('.'));
+    //         deleteImageFromCloudinary(idImage)
+    //     }
+
+    //     await NewsModel.deleteOne({ id: id });
+    //     return res.json({ message: "Đã xóa bài viết", id });
+    // } catch (error) {
+    //     res.status(500).json(error);
+    // }
+
+
     const id = req.params.id;
     try {
         const post = await NewsModel.findOne({ id: id });
+
+        const idthumnail = post?.avatar
+        if (idthumnail) {
+            const urlObject = new URL(idthumnail);
+            const path = urlObject.pathname;
+            const idImage = path.substring(path.indexOf('Tinhocnhuy/'), path.lastIndexOf('.'));
+            deleteImageFromCloudinary(idImage)
+        }
+
         const imageRegex = /src="([^"]+)"/g;
         const imageUrlMatches = post?.content.match(imageRegex);
         if (imageUrlMatches) {
@@ -209,19 +251,13 @@ async function deleteNews(req: Request, res: Response) {
             }));
         }
 
-        const idthumnail = post?.avatar
-        if (idthumnail) {
-            const urlObject = new URL(idthumnail);
-            const path = urlObject.pathname;
-            const idImage = path.substring(path.indexOf('Tinhocnhuy/'), path.lastIndexOf('.'));
-            deleteImageFromCloudinary(idImage)
-        }
-
         await NewsModel.deleteOne({ id: id });
-        return res.json({ message: "Đã xóa bài viết", id});
+        return res.json({ message: "Đã xóa bài viết", id });
     } catch (error) {
         res.status(500).json(error);
     }
+
+
 }
 
 //HIỂN THỊ CHI TIẾT TIN TỨC
