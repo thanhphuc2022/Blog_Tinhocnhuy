@@ -233,7 +233,7 @@ async function deleteNews(req: Request, res: Response) {
             const urlObject = new URL(idthumnail);
             const path = urlObject.pathname;
             const idImage = path.substring(path.indexOf('Tinhocnhuy/'), path.lastIndexOf('.'));
-            deleteImageFromCloudinary(idImage)
+            await deleteImageFromCloudinary(idImage)
         }
 
         const imageRegex = /src="([^"]+)"/g;
