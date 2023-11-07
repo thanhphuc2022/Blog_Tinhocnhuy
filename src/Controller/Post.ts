@@ -100,16 +100,16 @@ async function createPost(req: Request, res: Response) {
         const slug = convertToSlug(title);
 
         const idPost = await PostModel.findOne({ id: slug })
-        var newIdPost
+        var id
         if (!idPost) {
-            newIdPost = slug
+            id = slug
         } else {
-            newIdPost = slug + '-' + randomStringPost
+            id = slug + '-' + randomStringPost
         }
         thumbnailUrl = await uploadImageToCloudinary(linkfile)
 
         const newPost = await PostModel.create({
-            id: newIdPost,//Id Post
+            id: id,//Id Post
             title: title,
             description: description,
             avatar: thumbnailUrl,
@@ -128,7 +128,7 @@ async function createPost(req: Request, res: Response) {
         //     }
         // });
 
-        return res.json({ message: "Đã thêm bài viết", newIdPost });
+        return res.json({ message: "Đã thêm bài viết", id });
     } catch (err) {
         deleteImageFromCloudinary(publicId)
         console.log(err);

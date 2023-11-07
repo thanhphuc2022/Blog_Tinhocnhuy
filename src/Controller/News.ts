@@ -95,15 +95,15 @@ async function post_CreateNews(req: Request, res: Response) {
         const slug = convertToSlug(title)
 
         const idNews = await NewsModel.findOne({ id: slug })
-        var newIdNews
+        var id
         if (!idNews) {
-            newIdNews = slug
+            id = slug
         } else {
-            newIdNews = slug + '-' + randomStringPost
+            id = slug + '-' + randomStringPost
         }
         thumbnailUrl = await uploadImageToCloudinary(linkfile);
         const newPost = await NewsModel.create({
-            id: newIdNews,//Id Post
+            id: id,//Id Post
             title: title,
             description: description,
             avatar: thumbnailUrl,
@@ -124,7 +124,7 @@ async function post_CreateNews(req: Request, res: Response) {
         //     }
         // });
 
-        return res.json({ message: "Thêm thành công", newIdNews })
+        return res.json({ message: "Thêm thành công", id })
     } catch (error) {
         deleteImageFromCloudinary(publicId)
         console.log(error);
