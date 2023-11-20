@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
+import * as dateFns from 'date-fns';
 
 interface Post extends Document {
     id: string,
@@ -19,7 +20,11 @@ const postSchema: Schema = new Schema<Post>({
     content: { type: String, required: true },
     username: { type: String, required: true },
     views: { type: Number, default: 0 },
-    date: { type: String, default: () => new Date().toLocaleDateString() },
+    // date: { type: String, default: () => new Date().toLocaleDateString() },
+    date: {
+        type: String, // Sử dụng kiểu string cho trường date
+        default: () => dateFns.format(new Date(), 'dd-MM-yyyy'),
+    },
     categoryId: { type: String, ref: 'Category', required: true },
 }, {
     collection: 'Post',

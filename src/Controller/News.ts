@@ -351,7 +351,7 @@ async function top5LatestNews(req: Request, res: Response) {
         //     .select('id title description avatar date')
         //     .exec();
         const top5LatestNews = await NewsModel.find({}, 'id title description avatar date')
-            .sort({ date: +1 }) //.sort({ date: -1 })
+            .sort({ date: -1 }) //.sort({ date: -1 })
             .limit(5)
             .lean()
             .exec();
