@@ -23,7 +23,7 @@ const postSchema: Schema = new Schema<Post>({
     // date: { type: String, default: () => new Date().toLocaleDateString() },
     date: {
         type: String, // Sử dụng kiểu string cho trường date
-        default: () => dateFns.format(new Date(), 'dd-MM-yyyy'),
+        default: () => dateFns.format(new Date(), 'dd/MM/yyyy'),
     },
     categoryId: { type: String, ref: 'Category', required: true },
 }, {

@@ -27,7 +27,7 @@ const newsSchema: Schema = new Schema<News>({
     // date: { type: String, default: () => new Date().toLocaleDateString() },
     date: {
         type: String, // Sử dụng kiểu string cho trường date
-        default: () => dateFns.format(new Date(), 'dd-MM-yyyy'),
+        default: () => dateFns.format(new Date(), 'dd/MM/yyyy'),
     },
     typesid: { type: String, ref: 'Types_News', required: true },
     tag: { type: [String], ref: 'Tag', required: false }
