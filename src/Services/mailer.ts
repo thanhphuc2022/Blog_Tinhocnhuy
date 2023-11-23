@@ -3,6 +3,8 @@ import { Request, Response } from "express";
 import * as fs from "fs";
 import * as ejs from "ejs";
 import * as path from 'path';
+import dotenv from 'dotenv';
+dotenv.config();
 
 
 export let randomNumber: number = 0
@@ -42,14 +44,14 @@ export const sendMail = async function mailler(req: Request, res: Response) {
     service: "gmail",
 
     auth: {
-      user: "demowebtest68@gmail.com", // generated ethereal user
-      pass: "bzikhdtdgkpnubok", // generated ethereal password
+      user: process.env.emailAddress, // generated ethereal user
+      pass: process.env.emailPassword, // generated ethereal password
     },
   });
 
   // send mail with defined transport object
   let info = await transporter.sendMail({
-    from: "demowebtest68@gmail.com", // sender address
+    from: process.env.emailAddress, // sender address
     to: email, // list of receivers
     // to:"cauvangvietnam47@gmail.com",
     subject: "Hello ✔", // Subject line
