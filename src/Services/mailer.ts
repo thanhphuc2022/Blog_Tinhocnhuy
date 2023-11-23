@@ -62,6 +62,7 @@ export const sendMail = async function mailler(req: Request, res: Response) {
     return res.json({ mess: "da gui thanh cong" })
   }
   );
+  console.log('Email sent:', info);
 
   randomNumber = random
 }
