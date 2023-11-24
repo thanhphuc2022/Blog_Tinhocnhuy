@@ -24,14 +24,14 @@ export const sendMail = async function mailler(req: Request, res: Response) {
   const random = await generateRandomNumber();
 
   //trỏ đường dẫn đến file html templatEmail
-  const templatePath = path.join(__dirname, '../themeEmail/templateEmail.ejs');
-  const htmlMail = fs.readFileSync(templatePath, 'utf-8')
+  const templatePath =await path.join(__dirname, '../themeEmail/templateEmail.ejs');//
+  const htmlMail =await fs.readFileSync(templatePath, 'utf-8')//
   // Render template HTML với dữ liệu OTP
-  const renderedTemplate = ejs.render(htmlMail, { otp: random });
+  const renderedTemplate =await ejs.render(htmlMail, { otp: random });//
 
   // Thiết lập thời gian đếm ngược là 30 giây
   const countDownTime = 30 * 1000; // 30 giây tính theo millisecond
-  let countdown = setTimeout(() => {
+  let countdown =await setTimeout(() => {//
     // Sau 30 giây, đặt lại biến randomNumber thành 0
     randomNumber = 0;
   }, countDownTime);
