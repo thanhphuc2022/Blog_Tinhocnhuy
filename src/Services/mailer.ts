@@ -21,7 +21,7 @@ export const sendMail = async function mailler(req: Request, res: Response) {
   function generateRandomNumber(): number {
     return Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
   }
-  const random = generateRandomNumber();
+  const random = await generateRandomNumber();
 
   //trỏ đường dẫn đến file html templatEmail
   const templatePath = path.join(__dirname, '../themeEmail/templateEmail.ejs');
@@ -53,7 +53,7 @@ export const sendMail = async function mailler(req: Request, res: Response) {
   let info = await transporter.sendMail({
     from: "demowebtest68@gmail.com", // sender address
     to: email, // list of receivers
-    // to:"cauvangvietnam47@gmail.com",
+    // to:"cauvangvietnam47@gmail.com",s
     subject: "Hello ✔", // Subject line
     text: "Hello", // plain text body
     html: renderedTemplate, // html body
