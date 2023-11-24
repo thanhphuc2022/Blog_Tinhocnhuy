@@ -40,7 +40,7 @@ export const sendMail = async function mailler(req: Request, res: Response) {
   let testAccount = await nodemailer.createTestAccount();
 
   // create reusable transporter object using the default SMTP transport
-  let transporter = nodemailer.createTransport({
+  let transporter =await nodemailer.createTransport({    //thêm await
     service: "gmail",
 
     auth: {
