@@ -12,6 +12,9 @@ const SERVER_PORT = process.env.SERVER_PORT ? Number(process.env.SERVER_PORT) : 
 const ACCESS = process.env.JWT_SECRET_ACCESS || '';
 const REFRESH = process.env.JWT_SECRET_REFRESH || '';
 
+//EMAIL API
+const EMAIL_API=process.env.EMAIL_API || '';
+
 //API CLOUDINARY
 const CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME;
 const API_KEY = process.env.CLOUDINARY_API_KEY;
@@ -51,5 +54,6 @@ export const CONFIG = {
         redirect_uri: REDIRECT_URI,
         refresh_token: REFRESH_TOKEN,
         folderid: FOLDER_ID
-    }
+    },
+EMAIL_API
 };

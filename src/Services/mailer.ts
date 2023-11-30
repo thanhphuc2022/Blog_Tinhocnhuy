@@ -4,8 +4,7 @@ import * as fs from "fs";
 import * as ejs from "ejs";
 import * as path from 'path';
 import sgMail from '@sendgrid/mail';
-import dotenv from 'dotenv';
-dotenv.config();
+import { CONFIG } from "../config/config";
 
 export let randomNumber: number = 0
 
@@ -35,7 +34,7 @@ const email=req.body.email
   }, countDownTime);
 
   //Hàm gửi email
-  await sgMail.setApiKey("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")
+  await sgMail.setApiKey(CONFIG.EMAIL_API)
   const msg = {
     to: email, // Change to your recipient
     from: 'demowebtest68@gmail.com', // Change to your verified sender
