@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import AccountModel from "../Model/Account_Model";
 import bcrypt from "bcrypt";
-import { sendMail, sendMail_ForgotPassword } from "../Services/mailer";
+import { sendMail_ForgotPassword, OTPDangki } from "../Services/mailer";
 import { randomNumber, randomNumber_ForgotPassword } from "../Services/mailer";
 import { generateAccessToken, generateRefreshToken } from "../middleware/jwt"
 
@@ -53,7 +53,9 @@ async function get_Register(req: Request, res: Response) {
             return res.json("Mật khẩu không khớp");
         }
         if (errRgt == 0) {
-            sendMail(req, res);
+           await OTPDangki(req, res);
+            // sendMail(req, res);
+            // console.log(randomNumber);
             res.json({ message: "Vui lòng kiểm tra Email của bạn" })
         }
     } catch (error) {
@@ -65,11 +67,11 @@ async function get_Register(req: Request, res: Response) {
 async function post_Register(req: Request, res: Response) {
     try {
         const otp = req.body.otp
+        if (otp != randomNumber) {
+            return res.json({ message: "Mã OTP không đúng" })
+        }
         if (randomNumber == 0) {
             return res.json({ message: "Mã OTP đã hết hạn" })
-        } if (otp != randomNumber) {
-            return res.json({ message: "Mã OTP không đúng" })
-            //    console.log(randomNumber + "-------" + otp)
         } else {
             //mã hóa mật khẩu
             const salt = await bcrypt.genSalt(10);

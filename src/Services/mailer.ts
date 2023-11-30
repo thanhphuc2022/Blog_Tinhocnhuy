@@ -3,71 +3,58 @@ import { Request, Response } from "express";
 import * as fs from "fs";
 import * as ejs from "ejs";
 import * as path from 'path';
+import sgMail from '@sendgrid/mail';
 import dotenv from 'dotenv';
 dotenv.config();
-
 
 export let randomNumber: number = 0
 
 export let randomNumber_ForgotPassword: number = 0
 
 //hàm gửi email
-export const sendMail = async function mailler(req: Request, res: Response) {
-  const email = req.body.email
-  // Generate test SMTP service account from ethereal.email
-  // Only needed if you don't have a real mail account for testing
+export const OTPDangki = async function mail(req: Request, res: Response) {
+const email=req.body.email
 
   //hàm random mã otp
   function generateRandomNumber(): number {
     return Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
   }
-  const random = await generateRandomNumber();
+  const random = generateRandomNumber();
 
   //trỏ đường dẫn đến file html templatEmail
-  const templatePath =await path.join(__dirname, '../themeEmail/templateEmail.ejs');//
-  const htmlMail =await fs.readFileSync(templatePath, 'utf-8')//
+  const templatePath = path.join(__dirname, '../themeEmail/templateEmail.ejs');//
+  const htmlMail = fs.readFileSync(templatePath, 'utf-8')//
   // Render template HTML với dữ liệu OTP
-  const renderedTemplate =await ejs.render(htmlMail, { otp: random });//
+  const renderedTemplate = ejs.render(htmlMail, { otp: random });//
 
-  // Thiết lập thời gian đếm ngược là 30 giây
-  const countDownTime = 30 * 1000; // 30 giây tính theo millisecond
-  let countdown =await setTimeout(() => {//
-    // Sau 30 giây, đặt lại biến randomNumber thành 0
-    randomNumber = 0;
+  // Thiết lập thời gian đếm ngược là 60 giây
+  const countDownTime = 60 * 1000; // 60 giây tính theo millisecond
+  let countdown = setTimeout(() => {//
+    // Sau 60 giây, đặt lại biến randomNumber thành 0
+   // randomNumber = 0;
   }, countDownTime);
 
-  //GUI EMAIL
-  let testAccount = await nodemailer.createTestAccount();
-
-  // create reusable transporter object using the default SMTP transport
-  let transporter =await nodemailer.createTransport({    //thêm await
-    service: "gmail",
-
-    auth: {
-      user: process.env.emailAddress, // generated ethereal user
-      pass: process.env.emailPassword, // generated ethereal password
-    },
-  });
-
-  // send mail with defined transport object
-  let info = await transporter.sendMail({
-    from: "demowebtest68@gmail.com", // sender address
-    to: email, // list of receivers
-    // to:"cauvangvietnam47@gmail.com",s
-    subject: "Hello ✔", // Subject line
-    text: "Hello", // plain text body
-    html: renderedTemplate, // html body
-  }, (err) => {
-    if (err) {
-      return res.json({ mess: "loi:", err });
-    }
-    return res.json({ mess: "da gui thanh cong" })
+  //Hàm gửi email
+  await sgMail.setApiKey("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")
+  const msg = {
+    to: email, // Change to your recipient
+    from: 'demowebtest68@gmail.com', // Change to your verified sender
+    subject: 'Sending with SendGrid is Fun',
+    text: 'and easy to do anywhere, even with Node.js',
+    html: renderedTemplate,
   }
-  );
-  console.log('Email sent:', info);
+ await sgMail.send(msg)
+    .then(() => {
+      console.log('Email sent')
+    })
+    .catch((error) => {
+      console.error(error)
+    })
 
-  randomNumber = random
+    randomNumber = random
+    // console.log(randomNumber)
 }
+
 
 //hàm gửi email quên mật khẩu
 export const sendMail_ForgotPassword = async function mail_forgotPass(req: Request, res: Response) {
@@ -91,7 +78,7 @@ export const sendMail_ForgotPassword = async function mail_forgotPass(req: Reque
   const countDownTime = 60 * 1000; // 30 giây tính theo millisecond
   let countdown = setTimeout(() => {
     // Sau 30 giây, đặt lại biến randomNumber thành 0
-    randomNumber = 0;
+    randomNumber_ForgotPassword = 0;
   }, countDownTime);
 
   //GUI EMAIL
