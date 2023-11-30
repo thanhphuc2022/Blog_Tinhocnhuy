@@ -4,7 +4,8 @@ import * as fs from "fs";
 import * as ejs from "ejs";
 import * as path from 'path';
 import sgMail from '@sendgrid/mail';
-import { CONFIG } from "../config/config";
+import dotenv from 'dotenv';
+dotenv.config();
 
 export let randomNumber: number = 0
 
@@ -18,7 +19,7 @@ const email=req.body.email
   function generateRandomNumber(): number {
     return Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
   }
-  const random = generateRandomNumber();
+  const random = await generateRandomNumber();
 
   //trỏ đường dẫn đến file html templatEmail
   const templatePath = path.join(__dirname, '../themeEmail/templateEmail.ejs');//
@@ -34,7 +35,11 @@ const email=req.body.email
   }, countDownTime);
 
   //Hàm gửi email
-  await sgMail.setApiKey(CONFIG.EMAIL_API)
+  if (!process.env.EMAIL_API) {
+    throw new Error("Missing EMAIL_API environment variable");
+  }
+
+  await sgMail.setApiKey(process.env.EMAIL_API)
   const msg = {
     to: email, // Change to your recipient
     from: 'demowebtest68@gmail.com', // Change to your verified sender

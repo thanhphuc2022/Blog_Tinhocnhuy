@@ -13,7 +13,7 @@ const ACCESS = process.env.JWT_SECRET_ACCESS || '';
 const REFRESH = process.env.JWT_SECRET_REFRESH || '';
 
 //EMAIL API
-const EMAIL_API=process.env.EMAIL_API || '';
+const EMAIL_API=process.env.EMAIL_API;
 
 //API CLOUDINARY
 const CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME;
