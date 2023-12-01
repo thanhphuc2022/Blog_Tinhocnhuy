@@ -152,7 +152,7 @@ async function get_ForgotPassword(req: Request, res: Response) {
         if (!findEmail) {
             return res.json({ message: "Email đã đăng ký không đúng" });
         } else {
-            sendMail_ForgotPassword(req, res);
+           await sendMail_ForgotPassword(req, res);
             res.json({ message: "Vui lòng kiểm tra email của bạn" });
             emailForgotpass = email
             console.log(emailForgotpass)

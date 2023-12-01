@@ -31,7 +31,7 @@ const email=req.body.email
   const countDownTime = 60 * 1000; // 60 giây tính theo millisecond
   let countdown = setTimeout(() => {//
     // Sau 60 giây, đặt lại biến randomNumber thành 0
-   // randomNumber = 0;
+   randomNumber = 0;
   }, countDownTime);
 
   //Hàm gửi email
@@ -86,32 +86,25 @@ export const sendMail_ForgotPassword = async function mail_forgotPass(req: Reque
   }, countDownTime);
 
   //GUI EMAIL
-  let testAccount = await nodemailer.createTestAccount();
-
-  // create reusable transporter object using the default SMTP transport
-  let transporter = nodemailer.createTransport({
-    service: "gmail",
-
-    auth: {
-      user: "demowebtest68@gmail.com", // generated ethereal user
-      pass: "bzikhdtdgkpnubok", // generated ethereal password
-    },
-  });
-
-  // send mail with defined transport object
-  let info = await transporter.sendMail({
-    from: "demowebtest68@gmail.com", // sender address
-    to: email, // list of receivers
-    subject: "Hello ✔", // Subject line
-    text: "Hello", // plain text body
-    html: renderedTemplate, // html body
-  }, (err) => {
-    if (err) {
-      return res.json({ mess: "loi:", err });
-    }
-    return res.json({ mess: "da gui thanh cong" })
+  if (!process.env.EMAIL_API) {
+    throw new Error("Missing EMAIL_API environment variable");
   }
-  );
+
+  await sgMail.setApiKey(process.env.EMAIL_API)
+  const msg = {
+    to: email, // Change to your recipient
+    from: 'demowebtest68@gmail.com', // Change to your verified sender
+    subject: 'Sending with SendGrid is Fun',
+    text: 'and easy to do anywhere, even with Node.js',
+    html: renderedTemplate,
+  }
+ await sgMail.send(msg)
+    .then(() => {
+      console.log('Email sent')
+    })
+    .catch((error) => {
+      console.error(error)
+    })
 
   randomNumber_ForgotPassword = random
 }
@@ -124,32 +117,23 @@ export const contact = async function Email(req: Request, res: Response) {
   // Generate test SMTP service account from ethereal.email
   // Only needed if you don't have a real mail account for testing
 
-  //GUI EMAIL
-  let testAccount = await nodemailer.createTestAccount();
-
-  // create reusable transporter object using the default SMTP transport
-  let transporter = nodemailer.createTransport({
-    service: "gmail",
-
-    auth: {
-      user: "demowebtest68@gmail.com", // generated ethereal user
-      pass: "bzikhdtdgkpnubok", // generated ethereal password
-    },
-  });
-
-  // send mail with defined transport object
-  let info = await transporter.sendMail({
-    from: `${email} <demowebtest68@gmail.com>`, // sender address
-    to: 'hothanhphuc1204@gmail.com', // list of receivers
-    subject: subject, // Subject line
-    text: text, // plain text body
-    //html: , // html body
-  }, (err) => {
-    if (err) {
-      return res.json({ mess: "loi:", err });
-    }
-    return res.json({ mess: "da gui thanh cong" })
+  if (!process.env.EMAIL_API) {
+    throw new Error("Missing EMAIL_API environment variable");
   }
-  );
+
+  await sgMail.setApiKey(process.env.EMAIL_API)
+  const msg = {
+    to: 'hothanhphuc1204@gmail.com', // Change to your recipient
+    from: 'demowebtest68@gmail.com', // Change to your verified sender
+    subject: subject,
+    text: text,
+  }
+ await sgMail.send(msg)
+    .then(() => {
+      return res.json("Đã gửi thành công")
+    })
+    .catch((error) => {
+      return res.json("Lỗi")
+    })
 }
 
