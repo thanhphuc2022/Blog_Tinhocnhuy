@@ -240,13 +240,18 @@ async function loadNews(req: Request, res: Response) {
 //HIỂN THỊ TẤT CẢ TIN TỨC
 async function loadAllNews(req: Request, res: Response) {
     const page = parseInt(req.query.page as string) || 1;
-    const limit = 9;
+    const limit = 8;
     // const limit = parseInt(req.query.limit as string) || 10; //tùy chỉnh số lượng đối tượng trên 1 trang
     const startIndex = (page - 1) * limit;
     try {
-        const news = await NewsModel.find().select('id title description avatar date').lean().skip(startIndex).limit(limit).exec();
+        const news = await NewsModel.find()
+        .select('id title description avatar date')
+        .sort({ date:-1 })
+        .limit(limit)
+        .lean()
+        .skip(startIndex)
+        .exec();
         const totalNews = await NewsModel.countDocuments().exec();
-
         const paginationResult = {
             data: news,
             total: totalNews,
@@ -254,7 +259,6 @@ async function loadAllNews(req: Request, res: Response) {
             currentPage: page,
             limit: limit,
         };
-
         // res.render('users', paginationResult);
         res.json(paginationResult)
     } catch (err) {
