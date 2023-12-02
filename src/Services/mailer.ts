@@ -43,7 +43,7 @@ const email=req.body.email
   const msg = {
     to: email, // Change to your recipient
     from: 'demowebtest68@gmail.com', // Change to your verified sender
-    subject: 'Sending with SendGrid is Fun',
+    subject: 'CÔNG TY TNHH TM&DV TIN HỌC NHƯ Ý',
     text: 'and easy to do anywhere, even with Node.js',
     html: renderedTemplate,
   }
@@ -73,7 +73,7 @@ export const sendMail_ForgotPassword = async function mail_forgotPass(req: Reque
   const random = generateRandomNumber();
 
   //trỏ đường dẫn đến file html templatEmail
-  const templatePath = path.join(__dirname, '../themeEmail/templateEmail.ejs');
+  const templatePath = path.join(__dirname, '../themeEmail/templateEmail_forgotpassword.ejs');
   const htmlMail = fs.readFileSync(templatePath, 'utf-8')
   // Render template HTML với dữ liệu OTP
   const renderedTemplate = ejs.render(htmlMail, { otp: random });
@@ -94,7 +94,7 @@ export const sendMail_ForgotPassword = async function mail_forgotPass(req: Reque
   const msg = {
     to: email, // Change to your recipient
     from: 'demowebtest68@gmail.com', // Change to your verified sender
-    subject: 'Sending with SendGrid is Fun',
+    subject: 'SUPORT - CÔNG TY TNHH TM&DV TIN HỌC NHƯ Ý',
     text: 'and easy to do anywhere, even with Node.js',
     html: renderedTemplate,
   }
