@@ -245,15 +245,22 @@ async function loadAllNews(req: Request, res: Response) {
     const startIndex = (page - 1) * limit;
     try {
         const news = await NewsModel.find()
-        .select('id title description avatar date')
-        .sort({ date:-1 })
-        .limit(limit)
-        .lean()
-        .skip(startIndex)
-        .exec();
+            .select('id title description avatar date')
+            .sort({ date: -1 })
+            .limit(limit)
+            .lean()
+            .skip(startIndex)
+            .exec();
+
+        // Định dạng trường ngày trong kết quả
+        const formattedResult = news.map(item => ({
+            ...item,
+            date: item.date instanceof Date ? item.date.toISOString().split('T')[0] : item.date,
+        }));
+
         const totalNews = await NewsModel.countDocuments().exec();
         const paginationResult = {
-            data: news,
+            data: formattedResult,
             total: totalNews,
             pages: Math.ceil(totalNews / limit),
             currentPage: page,
@@ -359,7 +366,13 @@ async function top5LatestNews(req: Request, res: Response) {
             .limit(5)
             .lean()
             .exec();
-        res.json(top5LatestNews);
+
+        const formattedResult = top5LatestNews.map(item => ({
+            ...item,
+            date: item.date instanceof Date ? item.date.toISOString().split('T')[0] : item.date,
+        }));
+
+        res.json(formattedResult);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal server error' });

@@ -10,7 +10,8 @@ interface News extends Document {
     username: string,
     // Account: Object,
     views: number,
-    date: string,
+    // date: string,
+    date:Date,
     typesid: string,
     tag: [string]
 }
@@ -25,10 +26,11 @@ const newsSchema: Schema = new Schema<News>({
     // Account: { type: Schema.Types.ObjectId, ref: 'Accounts', required: true }, // Thêm trường account
     views: { type: Number, default: 0, },
     // date: { type: String, default: () => new Date().toLocaleDateString() },
-    date: {
-        type: String, // Sử dụng kiểu string cho trường date
-        default: () => dateFns.format(new Date(), 'dd/MM/yyyy'),
-    },
+    // date: {
+    //     type: String, // Sử dụng kiểu string cho trường date
+    //     default: () => dateFns.format(new Date(), 'dd/MM/yyyy'),
+    // },
+    date:{type: Date, default: Date.now},
     typesid: { type: String, ref: 'Types_News', required: true },
     tag: { type: [String], ref: 'Tag', required: false }
 }, { collection: 'News' })
