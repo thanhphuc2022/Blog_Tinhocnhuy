@@ -1,5 +1,7 @@
 import { v2 as cloudinary } from 'cloudinary';
 import unidecode from 'unidecode';
+import * as transliteration from 'transliteration';
+
 //hàm tạo chuỗi ngẫu nhiên tù 1->10 kí tự
 function generateRandomStringPost() {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -65,6 +67,7 @@ export async function deleteImageFromCloudinary(publicId: string) {
 
 
 //HÀM CHUYỂN CHUỔI TITLE CHO BÀI VIẾT
+// lỗi y => u, bỏ
 export function convertToSlug(title: string) {
     const titleNoAccent = unidecode(title);
     const encodedStr = titleNoAccent
@@ -75,3 +78,13 @@ export function convertToSlug(title: string) {
         .replace(/^-|-$/g, ''); // Nếu đoạn kết quả bắt đầu hoặc kết thúc bằng dấu gạch ngang thì loại bỏ chúng.
     return encodedStr;
 }
+
+export function convertToSlug2(title: string): string {
+    const titleNoDiacritics = transliteration.slugify(title, { lowercase: true });
+    const encodedStr = titleNoDiacritics
+      .replace(/[^a-z0-9 -]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '');
+    return encodedStr;
+  }

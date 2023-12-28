@@ -1,14 +1,14 @@
 import { Request, Response } from "express";
 import CategoriesModel from "../Model/Categories_Model";
 import unidecode from "unidecode";
-import { randomStringPost, convertToSlug } from "../Services/sp";
+import { randomStringPost, convertToSlug2 } from "../Services/sp";
 
 //THÊM DANH MỤC
 async function createCategories(req: Request, res: Response) {
     try {
         const name = req.body.name;
         //mã hóa Loại bài viết
-        const id = convertToSlug(name)
+        const id = convertToSlug2(name)
 
         // const titleNoAccent = unidecode(name);
         // const encodedStr = encodeURIComponent(titleNoAccent).replace(/%20/g, '-');

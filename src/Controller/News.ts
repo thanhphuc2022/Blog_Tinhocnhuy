@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { randomStringPost } from "../Services/sp";
 import { NewsModel } from "../Model/News_Models";
 import Types_News_Model from "../Model/Types_News_Models"
-import { uploadImageToCloudinary, deleteImageFromCloudinary, convertToSlug } from "../Services/sp"
+import { uploadImageToCloudinary, deleteImageFromCloudinary, convertToSlug, convertToSlug2} from "../Services/sp"
 import { v2 as cloudinary } from 'cloudinary';
 import fs from "fs";
 
@@ -92,7 +92,7 @@ async function post_CreateNews(req: Request, res: Response) {
             return res.json({ message: "Không tìm thấy danh mục bài viết" })
         }
         //mã hóa slug
-        const slug = convertToSlug(title)
+        const slug = convertToSlug2(title)
 
         const idNews = await NewsModel.findOne({ id: slug })
         var id
