@@ -123,7 +123,7 @@ export const contact = async function Email(req: Request, res: Response) {
 
   await sgMail.setApiKey(process.env.EMAIL_API)
   const msg = {
-    to: 'hothanhphuc1204@gmail.com', // Change to your recipient
+    to: 'truonglochg0192@gmail.com', // Change to your recipient
     from: 'demowebtest68@gmail.com', // Change to your verified sender
     subject: subject,
     text: text,

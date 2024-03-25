@@ -8,6 +8,8 @@ import news_Router from "./Router/news_Router";
 import types_Router from "./Router/types_news_Router";
 import categories_Router from "./Router/categories_Router";
 import tag_Router from "./Router/tag_Router";
+import About_index_Router from "./Router/DIsplay_Router/About_index_Router";
+import Images_About_Index_Router from "./Router/DIsplay_Router/Images_About_Index_Router";
 import bodyParser from "body-parser";
 import path from "path";
 import { v2 as cloudinary } from 'cloudinary';
@@ -102,6 +104,12 @@ app.use('/api', categories_Router);
 app.use('/api', types_Router);
 //tag
 app.use('/api', tag_Router);
+
+//Display
+//about_Index
+app.use('/api', About_index_Router);
+//Image_About_Index
+app.use('/api', Images_About_Index_Router);
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src', 'views'));
