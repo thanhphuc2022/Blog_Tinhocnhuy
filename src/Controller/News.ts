@@ -305,7 +305,7 @@ async function LoadNews_Tag(req: Request, res: Response) {
     const tagid = req.params.id
 
     const page = parseInt(req.query.page as string) || 1;
-    const limit = 9;
+    const limit = 8;
     const startIndex = (page - 1) * limit;
     try {
         const tag = await NewsModel.find({ tag: tagid }).select('id title description avatar date').lean().skip(startIndex).limit(limit).exec();

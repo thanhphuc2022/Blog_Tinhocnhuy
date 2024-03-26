@@ -5,6 +5,7 @@ import * as ejs from "ejs";
 import * as path from 'path';
 import sgMail from '@sendgrid/mail';
 import dotenv from 'dotenv';
+import { error } from "console";
 dotenv.config();
 
 export let randomNumber: number = 0
@@ -137,3 +138,33 @@ export const contact = async function Email(req: Request, res: Response) {
     })
 }
 
+
+export const contact2 = async function Email2(req:Request, res:Response){
+  const email = req.body.email
+  const subject = req.body.subject
+  const text = req.body.text
+
+  let testAccount = await nodemailer.createTestAccount();
+  let transporter = nodemailer.createTransport({
+    service: "Gmail",
+    auth: {
+      user: "demowebtest68@gmail.com",
+      pass: "eczgxgmcrbbsdzed"
+    }
+  });
+
+  let info = await transporter.sendMail({
+    from: '"Khách hàng - Tinhocnhuy.com" <sender@gmail.com>', // sender address
+    to: "hothanhphuc1204@gmail.com", // list of receivers
+    subject: subject, // Subject line
+    text: text // plain text body
+    // html: "<b>Test chức năng gửi mail ứng dụng Nodejs với Nodemailer</b>" // html body
+  }, (err) => {
+    if (err) {
+      return res.json({ mess: "loi:", err });
+    }
+    return res.json({ mess: "da gui thanh cong" })
+  }
+  );
+  
+}
