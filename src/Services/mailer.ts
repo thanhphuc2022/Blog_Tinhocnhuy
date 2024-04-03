@@ -142,10 +142,10 @@ export const contact = async function Email(req: Request, res: Response) {
 
 //Gửi mail thông qua mật khẩu ứng dụng - nodemailer
 export const contact2 = async function Email2(req:Request, res:Response){
-  const email = req.body.email
+  const contact = req.body.contact
   const subject = req.body.subject
-  const phone=req.body.phone
-  const text = req.body.text
+  const info=req.body.info
+  const text = req.body.text  
 
   let testAccount = await nodemailer.createTestAccount();
   let transporter = nodemailer.createTransport({
@@ -156,12 +156,12 @@ export const contact2 = async function Email2(req:Request, res:Response){
     }
   });
 
-  let info = await transporter.sendMail({
-    from: `"Khách hàng (${email}) - Tinhocnhuy.com" <sender@gmail.com>`, // sender address
+  let infoemail = await transporter.sendMail({
+    from: `"Khách hàng (${contact}) - Tinhocnhuy.com" <sender@gmail.com>`, // sender address
     to: "truonglochg0192@gmail.com", // list of receivers
     subject: subject, // Subject line
     // text: "Số điện thoại Khách hàng:  "+ `${phone} - ` + "Nội dung:" + " " + text  , // plain text body
-    html: `<b>Số điện thoại khách hàng: ${phone}</b><br><br><b>Nội dung:</b><p> ${text}</p>`
+    html: `<b>${info}</b><br><br><b>Nội dung:</b><p> ${text}</p>`
   }, (err) => {
     if (err) {
       return res.json({ mess: "loi:", err });
