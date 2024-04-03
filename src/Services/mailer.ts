@@ -161,7 +161,7 @@ export const contact2 = async function Email2(req:Request, res:Response){
     to: "truonglochg0192@gmail.com", // list of receivers
     subject: subject, // Subject line
     // text: "Số điện thoại Khách hàng:  "+ `${phone} - ` + "Nội dung:" + " " + text  , // plain text body
-    html: `<b>${info}</b><br><br><b>Nội dung:</b><p> ${text}</p>`
+    html: `<b>${info}</b><b>Nội dung:</b><p> ${text}</p>`
   }, (err) => {
     if (err) {
       return res.json({ mess: "loi:", err });
