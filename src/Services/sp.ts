@@ -54,6 +54,11 @@ export async function uploadImageToCloudinary(image: Express.Multer.File) {
     }
 }
 
+//HÀM LẤY PUBLIC_ID TỪ LINK HÌNH ẢNH CLOUDINARY
+export function getPublicIdFromUrl(url:string) {
+    const public_id = url.split('/').slice(-1)[0].split('.')[0];
+    return public_id;
+  }
 
 //HÀM XÓA HÌNH ẢNH ĐÃ UPLOAD LÊN COUDINARY
 export async function deleteImageFromCloudinary(publicId: string) {
@@ -82,9 +87,9 @@ export function convertToSlug(title: string) {
 export function convertToSlug2(title: string): string {
     const titleNoDiacritics = transliteration.slugify(title, { lowercase: true });
     const encodedStr = titleNoDiacritics
-      .replace(/[^a-z0-9 -]/g, '')
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-')
-      .replace(/^-|-$/g, '');
+        .replace(/[^a-z0-9 -]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '');
     return encodedStr;
-  }
+}

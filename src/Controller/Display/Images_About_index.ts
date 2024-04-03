@@ -1,44 +1,69 @@
-import { Request, Response } from "express";
-import { v2 as cloudinary } from 'cloudinary';
-import { uploadImageToCloudinary, deleteImageFromCloudinary, convertToSlug, convertToSlug2 } from "../../Services/sp"
-import Images_About_Index_Model from "../../Model/Display_Model/Images_About_Index_Model";
+// import { Request, Response } from "express";
+// import { v2 as cloudinary } from 'cloudinary';
+// import { uploadImageToCloudinary, deleteImageFromCloudinary, convertToSlug, convertToSlug2 } from "../../Services/sp"
+// import Images_About_Index_Model from "../../Model/Display_Model/Images_About_Index_Model";
+// import { getPublicIdFromUrl } from "../../Services/sp";
 
-interface TempMulterFile extends Express.Multer.File {
-    buffer: Buffer;
-}
+// interface TempMulterFile extends Express.Multer.File {
+//     buffer: Buffer;
+// }
 
-async function createImageAboutIndex(req: Request, res: Response) {
-    let images_about_index: string | null = null;
-    const link_image_about = req.file as TempMulterFile;
-    if (!link_image_about) {
-        return res.status(400).json("No image provided.")
-    } else {
-        images_about_index = await uploadImageToCloudinary(link_image_about);
-        //lấy public_id của hình ảnh-lưu vào cloud
-        const parts =images_about_index.split('/');
-        const id=parts[parts.length - 1];
-        // const id = images_about_index.split('/').slice(-1)[0].split('.')[0];
-        await Images_About_Index_Model.create({
-            public_id: id,
-            link_Images: images_about_index
-        })
-        return res.json({ message: "Thêm hình ảnh thành công" })
-    }
-}
+// async function createImageAboutIndex(req: Request, res: Response) {
+//     let images_about_index: string | null = null;
+//     const link_image_about = req.file as TempMulterFile;
+//     if (!link_image_about) {
+//         return res.status(400).json("No image provided.")
+//     } else {
+//         images_about_index = await uploadImageToCloudinary(link_image_about);
+//         //lấy public_id của hình ảnh-lưu vào cloud
+//         const public_id = getPublicIdFromUrl(images_about_index)
+//         //lưu vào database
+//         await Images_About_Index_Model.create({
+//             link_Images: images_about_index,
+//             public_id: public_id,
+//         })
+//         return res.json({ message: "Thêm hình ảnh thành công" })
+//     }
+// }
 
-async function deleteImageAboutIndex(req: Request, res: Response) {
-    try {
-        const idImage=req.params.id;
-    await Images_About_Index_Model.deleteOne({public_id:idImage})
-    await deleteImageFromCloudinary(idImage)
-    return res.json("Đã xoá")
-    } catch (error) {
-        return res.status(400).json(error)
-    }
-}
+// // async function updateImageABoutIndex(req:Request, res:Response) {
+// //     let images:string|null = null;
+// //     try {
+// //         const id=req.params.id;
+       
+// //     } catch (error) {
+        
+// //     }
+// // }
+
+// async function allImagaAboutIndex(req:Request, res:Response) {
+//     const allImagaAboutIndex=await Images_About_Index_Model.find({});
+//     return res.json(allImagaAboutIndex)
+
+// }
+
+// async function deleteImageAboutIndex(req: Request, res: Response) {
+//     try {
+//         const idImage = req.params.id;
+//         const images = await Images_About_Index_Model.findOne({ public_id: idImage })
+//         const deleteimages = images?.link_Images
+//         if (deleteimages) {
+//             const urlObject = new URL(deleteimages);
+//             const path = urlObject.pathname;
+//             const x = path.substring(path.indexOf('Tinhocnhuy/'), path.lastIndexOf('.'));
+//             await deleteImageFromCloudinary(x)
+//         }
+//         await Images_About_Index_Model.deleteOne({ public_id: idImage })
+//         return res.json("Đã xoá")
+//     } catch (error) {
+//         console.log(error)
+//         return res.status(400).json({ message: "Lỗi ???" })
+//     }
+// }
 
 
-export const Images_About_Index = {
-    createImageAboutIndex,
-    deleteImageAboutIndex,
-}
+// export const Images_About_Index = {
+//     createImageAboutIndex,
+//     deleteImageAboutIndex,
+//     allImagaAboutIndex,
+// }

@@ -111,6 +111,8 @@ export const sendMail_ForgotPassword = async function mail_forgotPass(req: Reque
 }
 
 //CONTACT
+
+//Gửi mail thông qua SendGrid
 export const contact = async function Email(req: Request, res: Response) {
   const email = req.body.email
   const subject = req.body.subject
@@ -138,10 +140,11 @@ export const contact = async function Email(req: Request, res: Response) {
     })
 }
 
-
+//Gửi mail thông qua mật khẩu ứng dụng - nodemailer
 export const contact2 = async function Email2(req:Request, res:Response){
   const email = req.body.email
   const subject = req.body.subject
+  const phone=req.body.phone
   const text = req.body.text
 
   let testAccount = await nodemailer.createTestAccount();
@@ -154,11 +157,11 @@ export const contact2 = async function Email2(req:Request, res:Response){
   });
 
   let info = await transporter.sendMail({
-    from: '"Khách hàng - Tinhocnhuy.com" <sender@gmail.com>', // sender address
-    to: "hothanhphuc1204@gmail.com", // list of receivers
+    from: `"Khách hàng (${email}) - Tinhocnhuy.com" <sender@gmail.com>`, // sender address
+    to: "truonglochg0192@gmail.com", // list of receivers
     subject: subject, // Subject line
-    text: text // plain text body
-    // html: "<b>Test chức năng gửi mail ứng dụng Nodejs với Nodemailer</b>" // html body
+    // text: "Số điện thoại Khách hàng:  "+ `${phone} - ` + "Nội dung:" + " " + text  , // plain text body
+    html: `<b>Số điện thoại khách hàng: ${phone}</b><br><br><b>Nội dung:</b><p> ${text}</p>`
   }, (err) => {
     if (err) {
       return res.json({ mess: "loi:", err });

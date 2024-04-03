@@ -21,7 +21,7 @@ auth_Router.post('/changePass', middleware, auth.changePassword);
 
 auth_Router.post('/putAccount', middleware, auth.putAccount);
 
-auth_Router.post('/contact', contact);
+auth_Router.post('/contact', contact2);
 
 auth_Router.post('/refreshtoken', requestRefreshToken);
 
