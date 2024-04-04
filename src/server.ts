@@ -10,7 +10,7 @@ import categories_Router from "./Router/categories_Router";
 import tag_Router from "./Router/tag_Router";
 // import About_index_Router from "./Router/Display_Router/About_index_Router";
 // import Images_About_Index_Router from "./Router/Display_Router/Images_About_Index_Router";
-import About_Router from "./Router/Display_Router/About_Router";
+// import About_Router from "./Router/Display_Router/About_Router";
 import bodyParser from "body-parser";
 import path from "path";
 import { v2 as cloudinary } from 'cloudinary';
@@ -112,7 +112,7 @@ app.use('/api', tag_Router);
 //Image_About_Index
 // app.use('/api', Images_About_Index_Router);
 //About
-app.use('/api', About_Router);
+// app.use('/api', About_Router);
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src', 'views'));
