@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
-import { About_Index_Model } from "../../Model/Display_Model/About_index_Model";
+// import { About_Index_Model } from "../../Model/Display_Model/About_index_Model";
+import { About_Index_Model } from "../Display_Model/About_index_Model";
 import { deleteImageFromCloudinary, uploadImageToCloudinary } from "../../Services/sp";
 import { content } from "googleapis/build/src/apis/content";
 

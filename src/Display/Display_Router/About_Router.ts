@@ -1,6 +1,7 @@
 import express from "express";
 import { middleware } from "../../middleware/jwt";
-import { About } from "../../Controller/Display/About";
+// import { About } from "../../Controller/Display/About";
+import { About } from "../Display_Controller/About";
 import { midlleware_file } from "../../middleware/file";
 
 const About_Router = express();
