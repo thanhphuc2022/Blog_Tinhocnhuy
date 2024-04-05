@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 // import { About_Model } from "../../Model/Display_Model/About_Model";
 import { About_Model } from "../Display_Model/About_Model";
 import { convertToSlug2, deleteImageFromCloudinary, randomStringPost, uploadImageToCloudinary } from "../../Services/sp";
-import { NewsModel } from "../../Model/News_Models";
 
 interface TempMulterFile extends Express.Multer.File {
     buffer: Buffer;
@@ -53,7 +52,7 @@ async function updateAbout(req: Request, res: Response) {
         const content = req.body.content;
         const linkimages = req.file as TempMulterFile;
         if (!linkimages) {
-            await NewsModel.findOneAndUpdate({ id: id }, {
+            await About_Model.findOneAndUpdate({ id: id }, {
                 title: title,
                 content: content,
             })
