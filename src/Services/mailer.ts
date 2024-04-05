@@ -158,7 +158,7 @@ export const contact2 = async function Email2(req:Request, res:Response){
 
   let infoemail = await transporter.sendMail({
     from: `"Khách hàng (${contact}) - Tinhocnhuy.com" <sender@gmail.com>`, // sender address
-    to: "truonglochg0192@gmail.com", // list of receivers
+    to: "tinhocnhuy@gmail.com", // list of receivers
     subject: subject, // Subject line
     // text: "Số điện thoại Khách hàng:  "+ `${phone} - ` + "Nội dung:" + " " + text  , // plain text body
     html: `<b>${info}</b><b>Nội dung:</b><p> ${text}</p>`
