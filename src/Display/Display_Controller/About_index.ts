@@ -49,10 +49,10 @@ async function updateAbout_Index(req: Request, res: Response) {
                 const idImage = path.substring(path.indexOf('Tinhocnhuy/'), path.lastIndexOf('.'));
                 await deleteImageFromCloudinary(idImage)
             }
-            images=await uploadImageToCloudinary(linkimages);
+            images = await uploadImageToCloudinary(linkimages);
             await About_Index_Model.updateOne({
-                content:content_about_index,
-                images:images
+                content: content_about_index,
+                images: images
             })
             return res.json({ message: "Cập nhật thành công" })
         }
