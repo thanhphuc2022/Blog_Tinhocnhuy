@@ -234,6 +234,29 @@ async function putAccount(req: Request, res: Response) {
     }
 }
 
+//ĐĂNG XUẤT TÀI KHOẢN
+// async function logout(req:Request, res:Response) {
+//     try {
+//         const refreshToken=req.headers.authorization?.split(" ")[1];
+
+//         // Kiểm tra xem refreshToken có tồn tại hay không
+//         if (!refreshToken) {
+//             return res.status(400).json({ message: "Không tìm thấy refresh token" });
+//         }
+
+//         // Hủy bỏ refreshToken bằng cách xóa nó khỏi cơ sở dữ liệu
+//         await AccountModel.findOneAndUpdate(
+//             { refreshToken: refreshToken },
+//             { $unset: { refreshToken: "" } }
+//         );
+
+//         res.status(200).json({ message: "Đăng xuất thành công" });
+//     } catch (error) {
+//         console.error("Lỗi trong quá trình đăng xuất:", error);
+//         res.status(500).json({ message: "Lỗi trong quá trình đăng xuất" });
+//     }
+// }
+
 async function getUploadDemo(req: Request, res: Response) {
     res.render('demo.ejs')
 }
@@ -247,5 +270,6 @@ export const auth = {
     post_ForgotPassword,
     changePassword,
     putAccount,
+    // logout
     // getUploadDemo,
 };

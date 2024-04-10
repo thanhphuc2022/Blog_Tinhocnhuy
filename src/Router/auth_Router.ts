@@ -23,6 +23,8 @@ auth_Router.post('/putAccount', middleware, auth.putAccount);
 
 auth_Router.post('/contact', contact2);
 
+// auth_Router.post('/logout', auth.logout);
+
 auth_Router.post('/refreshtoken', requestRefreshToken);
 
 auth_Router.get('/upload', upload.get_Uploadfile);

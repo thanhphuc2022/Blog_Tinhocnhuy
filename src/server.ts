@@ -14,6 +14,7 @@ import Images_logo_Router from "./Display/Display_Router/Images_logo_Router";
 // import About_Router from "./Router/Display_Router/About_Router";
 import About_Router from "./Display/Display_Router/About_Router";
 import Content_Banner_Router from "./Display/Display_Router/Content_Banner_Router";
+import Contact_Router from "./Display/Display_Router/Contact_Router";
 import bodyParser from "body-parser";
 import path from "path";
 import { v2 as cloudinary } from 'cloudinary';
@@ -116,6 +117,8 @@ app.use('/api', Images_logo_Router);
 app.use('/api', About_Router);
 //Content_banner
 app.use('/api', Content_Banner_Router);
+//Contact_Router
+app.use('/api', Contact_Router);
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src', 'views'));
