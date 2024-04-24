@@ -292,9 +292,22 @@ async function loadRandomNews(req: Request, res: Response) {
 //DANH SÁCH BÀI VIẾT THEO DANH MỤC
 async function loadNews_Types(req: Request, res: Response) {
     const typesid = req.params.id
+
+    const page= parseInt(req.query.page as string) || 1;
+    const limit=8
+    const startIndex = (page - 1) * limit;
+
     try {
-        const news = await NewsModel.find({ typesid: typesid })
-        return res.json(news);
+        const news = await NewsModel.find({ typesid: typesid }).select('id title description avatar date').lean().skip(startIndex).limit(limit).exec();
+        const totalPages = await NewsModel.countDocuments().exec();
+        const paginationResult = {
+            data: news,
+            total: totalPages,
+            pages: Math.ceil(totalPages / limit),
+            currentPage: page,
+            limit: limit
+        };
+        return res.json(paginationResult);
     } catch (error) {
         console.log(error)
     }
