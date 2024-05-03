@@ -280,7 +280,7 @@ async function loadAllNews(req: Request, res: Response) {
 
             data: formattedResult,
             total: totalArticles,
-            page:totalPages,
+            pages:totalPages,
             currentPage: currentPage,
             limit: limit,
         };
