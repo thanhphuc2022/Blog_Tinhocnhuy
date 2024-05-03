@@ -258,12 +258,30 @@ async function loadAllNews(req: Request, res: Response) {
             date: item.date instanceof Date ? item.date.toISOString().split('T')[0] : item.date,
         }));
 
-        const totalNews = await NewsModel.countDocuments().exec();
+        // Đếm tổng số bài viết
+        const totalArticles = await NewsModel.countDocuments().exec();
+
+        // Tính toán thông tin phân trang
+        const totalPages = Math.ceil(totalArticles / limit);
+        const currentPage = Math.min(page, totalPages);
+
+        // Nếu không có bài viết và đang ở trang cuối, trả về thông báo lỗi
+        if (news.length === 0 && currentPage > 1) {
+            return res.status(404).json({ message: 'Page not found' });
+        }
+
+        // const totalNews = await NewsModel.countDocuments().exec();
         const paginationResult = {
+            // data: formattedResult,
+            // total: totalNews,
+            // pages: Math.ceil(totalNews / limit),
+            // currentPage: page,
+            // limit: limit,
+
             data: formattedResult,
-            total: totalNews,
-            pages: Math.ceil(totalNews / limit),
-            currentPage: page,
+            total: totalArticles,
+            page:totalPages,
+            currentPage: currentPage,
             limit: limit,
         };
         // res.render('users', paginationResult);
@@ -293,18 +311,32 @@ async function loadRandomNews(req: Request, res: Response) {
 async function loadNews_Types(req: Request, res: Response) {
     const typesid = req.params.id
 
-    const page= parseInt(req.query.page as string) || 1;
-    const limit=8
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = 8
     const startIndex = (page - 1) * limit;
 
     try {
         const news = await NewsModel.find({ typesid: typesid }).select('id title description avatar date').lean().skip(startIndex).limit(limit).exec();
-        const totalPages = await NewsModel.countDocuments().exec();
+
+        // Đếm tổng số bài viết
+        const totalArticles = await NewsModel.countDocuments({ typesid: typesid }).exec();
+
+        // Tính toán thông tin phân trang
+        const totalPages = Math.ceil(totalArticles / limit);
+        const currentPage = Math.min(page, totalPages);
+
+        // Nếu không có bài viết và đang ở trang cuối, trả về thông báo lỗi
+        if (news.length === 0 && currentPage > 1) {
+            return res.status(404).json({ message: 'Page not found' });
+        }
+
+        // const totalPages = await NewsModel.countDocuments().exec();
         const paginationResult = {
             data: news,
-            total: totalPages,
-            pages: Math.ceil(totalPages / limit),
-            currentPage: page,
+            total: totalArticles,
+            // pages: Math.ceil(totalPages / limit),
+            pages: totalPages,
+            currentPage: currentPage,
             limit: limit
         };
         return res.json(paginationResult);
@@ -322,13 +354,24 @@ async function LoadNews_Tag(req: Request, res: Response) {
     const startIndex = (page - 1) * limit;
     try {
         const tag = await NewsModel.find({ tag: tagid }).select('id title description avatar date').lean().skip(startIndex).limit(limit).exec();
-        const totalPages = await NewsModel.countDocuments().exec();
+
+        // Đếm tổng số bài viết
+        const totalArticles = await NewsModel.countDocuments({ tag: tagid }).exec();
+
+        // Tính toán thông tin phân trang
+        const totalPages = Math.ceil(totalArticles / limit);
+        const currentPage = Math.min(page, totalPages);
+
+        // Nếu không có bài viết và đang ở trang cuối, trả về thông báo lỗi
+        if (tag.length === 0 && currentPage > 1) {
+            return res.status(404).json({ message: 'Page not found' });
+        }
 
         const paginationResult = {
             data: tag,
-            total: totalPages,
-            pages: Math.ceil(totalPages / limit),
-            currentPage: page,
+            total: totalArticles,
+            pages: totalPages,
+            currentPage: currentPage,
             limit: limit
         };
         return res.json(paginationResult)
