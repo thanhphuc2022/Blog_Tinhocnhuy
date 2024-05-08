@@ -237,59 +237,50 @@ async function loadNews(req: Request, res: Response) {
     }
 }
 
-//HIỂN THỊ TẤT CẢ TIN TỨC
+// DANH SÁCH TẤT CẢ BÀI VIẾT
 async function loadAllNews(req: Request, res: Response) {
     const page = parseInt(req.query.page as string) || 1;
     const limit = 8;
-    // const limit = parseInt(req.query.limit as string) || 10; //tùy chỉnh số lượng đối tượng trên 1 trang
     const startIndex = (page - 1) * limit;
+
     try {
-        const news = await NewsModel.find()
+        // Lấy tất cả bài viết và phân trang
+        const news = await NewsModel.find({})
             .select('id title description avatar date')
             .sort({ date: -1 })
-            .limit(limit)
             .lean()
             .skip(startIndex)
+            .limit(limit)
             .exec();
 
-        // Định dạng trường ngày trong kết quả
+        // Đếm tổng số bài viết
+        const totalArticles = await NewsModel.countDocuments().exec();
+
+        //         // Định dạng trường ngày trong kết quả
         const formattedResult = news.map(item => ({
             ...item,
             date: item.date instanceof Date ? item.date.toISOString().split('T')[0] : item.date,
         }));
 
-        // Đếm tổng số bài viết
-        const totalArticles = await NewsModel.countDocuments().exec();
-
         // Tính toán thông tin phân trang
         const totalPages = Math.ceil(totalArticles / limit);
         const currentPage = Math.min(page, totalPages);
 
-        // Nếu không có bài viết và đang ở trang cuối, trả về thông báo lỗi
-        if (news.length === 0 && currentPage > 1) {
-            return res.status(404).json({ message: 'Page not found' });
-        }
-
-        // const totalNews = await NewsModel.countDocuments().exec();
+        // Trả về kết quả phân trang
         const paginationResult = {
-            // data: formattedResult,
-            // total: totalNews,
-            // pages: Math.ceil(totalNews / limit),
-            // currentPage: page,
-            // limit: limit,
-
             data: formattedResult,
             total: totalArticles,
-            pages:totalPages,
+            pages: totalPages,
             currentPage: currentPage,
-            limit: limit,
+            limit: limit
         };
-        // res.render('users', paginationResult);
-        res.json(paginationResult)
-    } catch (err) {
-        res.status(500).json({ message: 'Server Error' });
+        return res.json(paginationResult);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: 'Internal Server Error' });
     }
 }
+
 
 //HIỂN THỊ NGẪU NHIÊN TIN TỨC
 async function loadRandomNews(req: Request, res: Response) {
