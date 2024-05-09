@@ -307,10 +307,16 @@ async function loadNews_Types(req: Request, res: Response) {
     const startIndex = (page - 1) * limit;
 
     try {
-        const news = await NewsModel.find({ typesid: typesid }).select('id title description avatar date').lean().skip(startIndex).limit(limit).exec();
+        const news = await NewsModel.find({ typesid: typesid }).select('id title description avatar date').sort({ date: -1 }).lean().skip(startIndex).limit(limit).exec();
 
         // Đếm tổng số bài viết
         const totalArticles = await NewsModel.countDocuments({ typesid: typesid }).exec();
+
+        // Định dạng trường ngày trong kết quả
+        const formattedResult = news.map(item => ({
+            ...item,
+            date: item.date instanceof Date ? item.date.toISOString().split('T')[0] : item.date,
+        }));
 
         // Tính toán thông tin phân trang
         const totalPages = Math.ceil(totalArticles / limit);
@@ -323,7 +329,7 @@ async function loadNews_Types(req: Request, res: Response) {
 
         // const totalPages = await NewsModel.countDocuments().exec();
         const paginationResult = {
-            data: news,
+            data: formattedResult,
             total: totalArticles,
             // pages: Math.ceil(totalPages / limit),
             pages: totalPages,
