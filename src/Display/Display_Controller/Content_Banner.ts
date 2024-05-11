@@ -11,26 +11,28 @@ async function createContentBanner(req: Request, res: Response) {
     try {
         const title = req.body.title;
         const content = req.body.content;
+        const linkservices=req.body.linkservices;
         const linkimages = req.file as TempMulterFile;
         if (!linkimages) {
             return res.status(400).json({ error: 'No image provided.' })
         }
-        if (title == '' || content == '') {
+        if (title == '') {
             return res.status(400).json({ error: "Vui lòng điền đầy đủ thông tin" });
         } else {
-            const id_slug = convertToSlug2(content)
+            const id_slug = convertToSlug2(title)
             const id = await Content_Banner_Model.findOne({ id: id_slug })
-            var id_ContentBanner
+            var id_titleBanner
             if (!id) {
-                id_ContentBanner = id_slug
+                id_titleBanner = id_slug
             } else {
-                id_ContentBanner = id_slug + '-' + randomStringPost
+                id_titleBanner = id_slug + '-' + randomStringPost
             }
             images = await uploadImageToCloudinary(linkimages)
             Content_Banner_Model.create({
-                id: id_ContentBanner,
+                id: id_titleBanner,
                 title: title,
                 content: content,
+                linkservices: linkservices,
                 images: images
             })
             return res.json({ message: "Thêm thành công" })
@@ -46,11 +48,13 @@ async function updateContentBanner(req: Request, res: Response) {
         const id = req.params.id;
         const title = req.body.title;
         const content = req.body.content;
+        const linkservices=req.body.linkservices;
         const linkimages = req.file as TempMulterFile;
         if (!linkimages) {
             await Content_Banner_Model.findOneAndUpdate({ id: id }, {
                 title: title,
-                content,
+                content: content,
+                linkservices: linkservices
             })
             return res.json({ message: "Cập nhật thành công" })
         } else {
