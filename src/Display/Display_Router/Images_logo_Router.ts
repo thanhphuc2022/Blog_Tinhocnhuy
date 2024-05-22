@@ -9,6 +9,6 @@ Images_logo_Router.post('/createimagelogo', middleware, midlleware_file, Images_
 
 Images_logo_Router.post('/deleteimagelogo/:id', middleware, midlleware_file, Images_logo_Index.deleteImageLogo);
 
-Images_logo_Router.get('/allimagelogo', middleware, Images_logo_Index.allImagaLogo);
+Images_logo_Router.get('/allimagelogo', Images_logo_Index.allImagaLogo);
 
 export default Images_logo_Router;
