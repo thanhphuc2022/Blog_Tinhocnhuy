@@ -12,6 +12,6 @@ About_Router.post('/updateabout/:id', middleware, midlleware_file, About.updateA
 
 About_Router.post('/deleteabout/:id', middleware, midlleware_file, About.deleteAbout);
 
-About_Router.get('/allabout', middleware, About.allAbout)
+About_Router.get('/allabout', About.allAbout)
 
 export default About_Router

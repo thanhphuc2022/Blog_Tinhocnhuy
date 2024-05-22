@@ -12,6 +12,6 @@ About_index_Router.post('/updateaboutcontent', middleware, midlleware_file, Abou
 
 About_index_Router.post('/deleteaboutcontent', middleware, About_Index.deleteAbout_Index);
 
-About_index_Router.get('/aboutcontent', middleware, About_Index.findAboutIndex);
+About_index_Router.get('/aboutcontent', About_Index.findAboutIndex);
 
 export default About_index_Router

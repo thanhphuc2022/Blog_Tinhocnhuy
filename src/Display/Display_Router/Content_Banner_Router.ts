@@ -11,6 +11,6 @@ Content_Banner_Router.post('/updatecontentbanner/:id', middleware, midlleware_fi
 
 Content_Banner_Router.post('/deletecontentbanner/:id', middleware, midlleware_file, Content_Banner.deleteContent_Banner);
 
-Content_Banner_Router.get('/allcontentbanner', middleware, Content_Banner.allContent_Banner);
+Content_Banner_Router.get('/allcontentbanner', Content_Banner.allContent_Banner);
 
 export default Content_Banner_Router
