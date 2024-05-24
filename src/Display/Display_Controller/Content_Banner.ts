@@ -72,7 +72,7 @@ async function updateContentBanner(req: Request, res: Response) {
                 content: content,
                 images: images
             })
-            return res.json({ messaage: "Cập nhật thành công" })
+            return res.json({ message: "Cập nhật thành công" })
         }
     } catch (error) {
         return res.status(500).json(error)
