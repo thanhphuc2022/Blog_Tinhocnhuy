@@ -156,7 +156,7 @@ async function get_ForgotPassword(req: Request, res: Response) {
             res.json({ message: "Vui lòng kiểm tra email của bạn" });
             emailForgotpass = email
             console.log(emailForgotpass)
-            console.log(randomString)
+            // console.log(randomString)
         }
 
     } catch (error) {

@@ -13,7 +13,7 @@ auth_Router.post('/postregister', auth.post_Register);
 
 auth_Router.post('/login', auth.login);
 
-auth_Router.get('/forgotpass', auth.get_ForgotPassword);
+auth_Router.post('/forgotpass', auth.get_ForgotPassword);
 
 auth_Router.post('/forgotpassword', auth.post_ForgotPassword);
 
