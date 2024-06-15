@@ -1,6 +1,15 @@
 import { Request, Response } from "express";
 import ContactModel from "../Display_Model/Contact_Model";
 
+async function getContact(req: Request, res: Response) {
+    try {
+        const contact = await ContactModel.find({})
+        return res.json({contact})
+    } catch (error) {
+        return res.json(error)
+    }
+}
+
 async function createContact(req: Request, res: Response) {
     try {
         const contact = req.body.contact;
@@ -39,6 +48,7 @@ async function updateContact(req: Request, res: Response) {
 }
 
 export const Contact = {
+    getContact,
     createContact,
     updateContact
 }
