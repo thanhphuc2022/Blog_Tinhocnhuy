@@ -21,7 +21,7 @@ async function updateRole(req: Request, res: Response) {
 
 }
 
-export const Auth = {
+export const Authentication = {
     AllAccount,
     updateRole
 }
