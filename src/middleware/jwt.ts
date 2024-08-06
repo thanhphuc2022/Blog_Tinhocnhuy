@@ -2,7 +2,7 @@ import jwt, { Secret, JwtPayload } from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 import { CONFIG } from '../config/config';
 import AccountModel from '../Model/Account_Model';
-import { auth, authorization } from '../Controller/auth';
+import { Account, authorization } from '../Controller/Account';
 
 //HAM TAO ACCESSTOKEN
 export function generateAccessToken(user: any) {

@@ -2,7 +2,8 @@ import express, { Request, Response } from "express";
 import mongoose from "mongoose";
 import { CONFIG } from "./config/config";
 import token_Router from "./Router/token_Router";
-import auth_Router from "./Router/auth_Router";
+import Account_Router from "./Router/Account_Router";
+import Auth_Router from "./Router/Auth_Router";
 import post_Router from "./Router/post_Router";
 import news_Router from "./Router/news_Router";
 import types_Router from "./Router/types_news_Router";
@@ -95,8 +96,10 @@ app.get('/', function (req: Request, res: Response) {
 
 //token
 app.use('/api', token_Router);
+//Account
+app.use('/api', Account_Router);
 //auth
-app.use('/api', auth_Router);
+app.use('/api', Auth_Router);
 //post
 app.use('/api', post_Router);
 //news
