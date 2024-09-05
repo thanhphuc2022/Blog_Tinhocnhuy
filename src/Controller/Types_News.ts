@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import Types_News_Model from "../Model/Types_News_Models";
 import unidecode from "unidecode";
-import { convertToSlug2, randomStringPost } from "../Services/sp";
+import { convertToSlug, randomStringPost } from "../Services/sp";
 
 //THÊM DANH MỤC BÀI VIẾT
 async function createTypes_News(req: Request, res: Response) {
@@ -11,7 +11,7 @@ async function createTypes_News(req: Request, res: Response) {
             return res.json({ message: 'Vui lòng điền đầy đủ thông tin' })
         }
         //MÃ hóa slug
-        const id = convertToSlug2(name)
+        const id = convertToSlug(name)
 
         const findIdCategories_News = await Types_News_Model.findOne({ id: id })
         if (findIdCategories_News) {

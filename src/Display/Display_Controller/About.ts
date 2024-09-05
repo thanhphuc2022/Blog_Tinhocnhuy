@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 // import { About_Model } from "../../Model/Display_Model/About_Model";
 import { About_Model } from "../Display_Model/About_Model";
-import { convertToSlug2, deleteImageFromCloudinary, randomStringPost, uploadImageToCloudinary } from "../../Services/sp";
+import { convertToSlug, deleteImageFromCloudinary, randomStringPost, uploadImageToCloudinary } from "../../Services/sp";
 
 interface TempMulterFile extends Express.Multer.File {
     buffer: Buffer;
@@ -21,7 +21,7 @@ async function createAbout(req: Request, res: Response) {
         if (title == '' || content == '') {
             return res.status(400).json({ error: "Vui lòng điền đầy đủ thông tin" })
         } else {
-            const id_slug = convertToSlug2(title)
+            const id_slug = convertToSlug(title)
             const id = await About_Model.findOne({ id: id_slug })
             var idAbout
             if (!id) {

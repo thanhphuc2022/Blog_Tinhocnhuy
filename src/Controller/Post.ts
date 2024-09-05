@@ -3,7 +3,7 @@ import { PostModel } from "../Model/Post_Model";
 import CategoriesModel from "../Model/Categories_Model";
 import { NewsModel } from "../Model/News_Models";
 import { v2 as cloudinary } from 'cloudinary';
-import { uploadImageToCloudinary, randomStringPost, deleteImageFromCloudinary, convertToSlug2 } from "../Services/sp";
+import { uploadImageToCloudinary, randomStringPost, deleteImageFromCloudinary, convertToSlug } from "../Services/sp";
 import fs from "fs";
 
 //UPLOAD HÌNH ẢNH LÊN CLOUDINARY KHI CHỌN HÌNH ẢNH TẠO BÀI VIẾT
@@ -97,7 +97,7 @@ async function createPost(req: Request, res: Response) {
             return res.json({ message: "Không tìm thấy Danh mục" })
         }
         //mã hóa slug
-        const slug = convertToSlug2(title);
+        const slug = convertToSlug(title);
 
         const idPost = await PostModel.findOne({ id: slug })
         var id

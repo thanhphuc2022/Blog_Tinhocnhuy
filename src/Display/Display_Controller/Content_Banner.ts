@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { Content_Banner_Model } from "../Display_Model/Content_Banner_Model";
-import { convertToSlug2, deleteImageFromCloudinary, randomStringPost, uploadImageToCloudinary } from "../../Services/sp";
+import { convertToSlug, deleteImageFromCloudinary, randomStringPost, uploadImageToCloudinary } from "../../Services/sp";
 
 interface TempMulterFile extends Express.Multer.File {
     buffer: Buffer;
@@ -19,7 +19,7 @@ async function createContentBanner(req: Request, res: Response) {
         if (title == '') {
             return res.status(400).json({ error: "Vui lòng điền đầy đủ thông tin" });
         } else {
-            const id_slug = convertToSlug2(title)
+            const id_slug = convertToSlug(title)
             const id = await Content_Banner_Model.findOne({ id: id_slug })
             var id_titleBanner
             if (!id) {

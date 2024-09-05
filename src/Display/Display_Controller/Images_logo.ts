@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { v2 as cloudinary } from 'cloudinary';
-import { uploadImageToCloudinary, deleteImageFromCloudinary, convertToSlug, convertToSlug2 } from "../../Services/sp"
+import { uploadImageToCloudinary, deleteImageFromCloudinary, convertToSlug} from "../../Services/sp"
 import Images_logo_Model from "../Display_Model/Images_logo_Model";
 import { getPublicIdFromUrl } from "../../Services/sp";
 
