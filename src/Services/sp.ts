@@ -95,11 +95,23 @@ export async function deleteImageFromCloudinary(publicId: string) {
 //     return encodedStr;
 // }
 
+// export function convertToSlug(title: string): string {
+//     // Sử dụng slugify với tùy chọn bỏ dấu và chuyển thành chữ thường
+//     const slug = slugify(title, {
+//         lower: true,           // Chuyển thành chữ thường
+//         remove: /[/*+~.()'"!:@]/g,  // Loại bỏ các ký tự đặc biệt không mong muốn
+//     });
+//     return slug;
+// }
+
 export function convertToSlug(title: string): string {
+    // Thay thế các ký tự đặc biệt không mong muốn trước khi slugify
+    const sanitizedTitle = title.replace(/\//g, '-');  // Thay thế dấu gạch chéo bằng dấu gạch ngang
+    
     // Sử dụng slugify với tùy chọn bỏ dấu và chuyển thành chữ thường
-    const slug = slugify(title, {
+    const slug = slugify(sanitizedTitle, {
         lower: true,           // Chuyển thành chữ thường
-        remove: /[*+~.()'"!:@]/g,  // Loại bỏ các ký tự đặc biệt không mong muốn
+        remove: /[*+~.()'"!:@]/g,  // Loại bỏ các ký tự đặc biệt không mong muốn (loại bỏ ký tự `/` vì đã xử lý ở trên)
     });
     return slug;
 }

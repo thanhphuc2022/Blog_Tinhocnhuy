@@ -461,6 +461,12 @@ async function AllSlugNews(req: Request, res: Response) {
     return res.json(news);
 }
 
+async function Testslug(req: Request, res: Response) {
+    const slug= req.body.slug;
+    const return_slug =convertToSlug(slug)
+    return res.json(return_slug)
+}
+
 export const News = {
     get_CreateNews,
     post_CreateNews,
@@ -477,5 +483,6 @@ export const News = {
     loadViews,
     countViews,
     AllSlugNews,
-    uploadImagesNews
+    uploadImagesNews,
+    Testslug
 }
