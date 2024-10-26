@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { PostModel } from "../Model/Post_Model";
 import CategoriesModel from "../Model/Categories_Model";
 import { NewsModel } from "../Model/News_Models";
@@ -111,6 +111,7 @@ async function createPost(req: Request, res: Response) {
         const newPost = await PostModel.create({
             id: id,//Id Post
             title: title,
+            slug: id,
             description: description,
             avatar: thumbnailUrl,
             content: content,
@@ -141,7 +142,7 @@ async function updatePost(req: Request, res: Response) {
     let thumbnailUrl: string | null = null;
     try {
         const id = req.params.id;
-        const { title, description, content, category } = req.body;
+        const { title, slug, description, content, category } = req.body;
         const linkfile = req.file as TempMulterFile;
 
         // if (!linkfile) {
@@ -162,6 +163,7 @@ async function updatePost(req: Request, res: Response) {
         if (!linkfile) {
             await PostModel.findOneAndUpdate({ id: id }, {
                 title: title,
+                slug: slug,
                 description: description,
                 content: content,
                 category: Cate.id,
@@ -171,6 +173,7 @@ async function updatePost(req: Request, res: Response) {
             thumbnailUrl = await uploadImageToCloudinary(linkfile)
             await PostModel.findOneAndUpdate({ id: id }, {
                 title: title,
+                slug: slug,
                 description: description,
                 avatar: thumbnailUrl,
                 content: content,
@@ -220,8 +223,8 @@ async function deletePost(req: Request, res: Response) {
 
 //CHI TIẾT BÀI VIẾT
 async function loadPost(req: Request, res: Response) {
-    const postId = req.params.id;
-    const post = await PostModel.findOne({ id: postId })
+    const postSlug = req.params.slug;
+    const post = await PostModel.findOne({ slug: postSlug })
     if (!post) {
         res.status(505).json({ message: "Bài viết không tồn tại" });
     } else {
@@ -236,7 +239,7 @@ async function loadAllPost(req: Request, res: Response) {
     const limit = 9;
     const startIndex = (page - 1) * limit;
     try {
-        const posts = await PostModel.find().select('id title description avatar date views username').skip(startIndex).limit(limit)
+        const posts = await PostModel.find().select('id title slug description avatar date views username').skip(startIndex).limit(limit)
         const totalPosts = await PostModel.countDocuments().exec();
 
         const paginationResult = {
@@ -282,7 +285,7 @@ async function top4_LoadPost_Dichvu(req: Request, res: Response) {
         const top5LatestPost = await PostModel.find({ categoryId: 'Dich-vu' })
             .sort({ date: -1 })
             .limit(4)
-            .select('id title avatar')
+            .select('id title slug avatar')
             .exec();
         res.json(top5LatestPost);
     } catch (error) {
@@ -297,7 +300,7 @@ async function top4_LoadPost_Giaiphap(req: Request, res: Response) {
         const top5LatestPost = await PostModel.find({ categoryId: 'Giai-phap' })
             .sort({ date: -1 })
             .limit(4)
-            .select('id title avatar')
+            .select('id title slug avatar')
             .exec();
         res.json(top5LatestPost);
     } catch (error) {

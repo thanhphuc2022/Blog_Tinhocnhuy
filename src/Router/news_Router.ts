@@ -13,7 +13,7 @@ news_Router.post('/updateNews/:id', middleware, midlleware_file, News.updateNews
 
 news_Router.post('/deleteNews/:id', middleware, News.deleteNews)
 
-news_Router.get('/News/:id', News.loadNews)
+news_Router.get('/News/:slug', News.loadNews)
 
 news_Router.get('/AllNews', News.loadAllNews)
 

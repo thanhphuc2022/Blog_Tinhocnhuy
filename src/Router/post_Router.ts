@@ -19,7 +19,7 @@ post_Router.get('/AllPost', Post.loadAllPost);
 
 post_Router.get('/loadPostCategories/:id', Post.loadPost_Categories);
 
-post_Router.get('/bv/:id', Post.loadPost);
+post_Router.get('/bv/:slug', Post.loadPost);
 
 post_Router.get('/loadPost_top4_Dichvu', Post.top4_LoadPost_Dichvu)
 

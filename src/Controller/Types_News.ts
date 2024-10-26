@@ -85,6 +85,25 @@ async function loadAllType_News(req: Request, res: Response) {
     }
 }
 
+// async function swaporder(req: Request, res: Response) {
+//     const { firstId, secondId } = req.body; // Nhận ID của hai mục cần hoán đổi
+  
+//     try {
+  
+//       // Lấy dữ liệu của hai mục
+//       const firstItem = await Types_News_Model.findOne({ id: firstId });
+//       const secondItem = await Types_News_Model.findOne({ id: secondId });
+  
+//       // Hoán đổi giá trị order giữa hai mục
+//       await Types_News_Model.updateOne({ id: firstId }, { $set: { order: secondItem.order } });
+//       await Types_News_Model.updateOne({ id: secondId }, { $set: { order: firstItem.order } });
+  
+//       res.json({ message: 'Order swapped successfully!' });
+//     } catch (error) {
+//       res.status(500).json({ error: 'Error swapping order' });
+//     }
+//   };
+  
 export const Types_News = {
     createTypes_News,
     updateTypes_News,

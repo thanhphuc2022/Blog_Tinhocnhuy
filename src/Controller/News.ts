@@ -105,6 +105,7 @@ async function post_CreateNews(req: Request, res: Response) {
         const newPost = await NewsModel.create({
             id: id,//Id Post
             title: title,
+            slug: id,
             description: description,
             avatar: thumbnailUrl,
             content: content,
@@ -137,7 +138,7 @@ async function updateNews(req: Request, res: Response) {
     let thumbnailUrl: string | null = null;
     try {
         const id = req.params.id;
-        const { title, description, content, tag } = req.body;
+        const { title, slug, description, content, tag } = req.body;
         const nametypes = req.body.types;
         const linkfile = req.file as TempMulterFile;
         // if (title == '' || description == '' || content == '' || linkfile == '' || nametypes == '') {
@@ -165,6 +166,7 @@ async function updateNews(req: Request, res: Response) {
         if (!linkfile) {
             await NewsModel.findOneAndUpdate({ id: id }, {
                 title: title,
+                slug: slug,
                 description: description,
                 content: content,
                 typesid: types.id,
@@ -175,6 +177,7 @@ async function updateNews(req: Request, res: Response) {
             thumbnailUrl = await uploadImageToCloudinary(linkfile);
             await NewsModel.findOneAndUpdate({ id: id }, {
                 title: title,
+                slug: slug,
                 description: description,
                 avatar: thumbnailUrl,
                 content: content,
@@ -227,8 +230,8 @@ async function deleteNews(req: Request, res: Response) {
 
 //HIỂN THỊ CHI TIẾT TIN TỨC
 async function loadNews(req: Request, res: Response) {
-    const newsId = req.params.id
-    const news = await NewsModel.findOne({ id: newsId })
+    const newsSlug = req.params.slug
+    const news = await NewsModel.findOne({ slug: newsSlug })
     if (!news) {
         res.status(505).json({ message: "Bài viết không tồn tại" });
     } else {
@@ -246,7 +249,7 @@ async function loadAllNews(req: Request, res: Response) {
     try {
         // Lấy tất cả bài viết và phân trang
         const news = await NewsModel.find({})
-            .select('id title description avatar date')
+            .select('id title slug description avatar date')
             .sort({ date: -1 })
             .lean()
             .skip(startIndex)
@@ -307,7 +310,7 @@ async function loadNews_Types(req: Request, res: Response) {
     const startIndex = (page - 1) * limit;
 
     try {
-        const news = await NewsModel.find({ typesid: typesid }).select('id title description avatar date').sort({ date: -1 }).lean().skip(startIndex).limit(limit).exec();
+        const news = await NewsModel.find({ typesid: typesid }).select('id title slug description avatar date').sort({ date: -1 }).lean().skip(startIndex).limit(limit).exec();
 
         // Đếm tổng số bài viết
         const totalArticles = await NewsModel.countDocuments({ typesid: typesid }).exec();
@@ -350,7 +353,7 @@ async function LoadNews_Tag(req: Request, res: Response) {
     const limit = 8;
     const startIndex = (page - 1) * limit;
     try {
-        const tag = await NewsModel.find({ tag: tagid }).select('id title description avatar date').lean().skip(startIndex).limit(limit).exec();
+        const tag = await NewsModel.find({ tag: tagid }).select('id title slug description avatar date').lean().skip(startIndex).limit(limit).exec();
 
         // Đếm tổng số bài viết
         const totalArticles = await NewsModel.countDocuments({ tag: tagid }).exec();
@@ -414,7 +417,7 @@ async function top5LatestNews(req: Request, res: Response) {
         //     .limit(5) // Giới hạn chỉ lấy 5 bài viết
         //     .select('id title description avatar date')
         //     .exec();
-        const top5LatestNews = await NewsModel.find({}, 'id title description avatar date')
+        const top5LatestNews = await NewsModel.find({}, 'id title slug description avatar date')
             .sort({ date: -1 }) //.sort({ date: -1 })
             .limit(5)
             .lean()
@@ -461,6 +464,7 @@ async function AllSlugNews(req: Request, res: Response) {
     return res.json(news);
 }
 
+//Test convert slug
 async function Testslug(req: Request, res: Response) {
     const slug= req.body.slug;
     const return_slug =convertToSlug(slug)
