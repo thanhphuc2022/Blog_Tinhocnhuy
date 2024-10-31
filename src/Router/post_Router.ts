@@ -21,6 +21,8 @@ post_Router.get('/loadPostCategories/:id', Post.loadPost_Categories);
 
 post_Router.get('/bv/:slug', Post.loadPost);
 
+post_Router.get('/post/:id', Post.loadPostId);
+
 post_Router.get('/loadPost_top4_Dichvu', Post.top4_LoadPost_Dichvu)
 
 post_Router.get('/loadPost_top4_Giaiphap', Post.top4_LoadPost_Giaiphap)

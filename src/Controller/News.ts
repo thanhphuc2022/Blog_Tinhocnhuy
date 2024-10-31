@@ -240,6 +240,18 @@ async function loadNews(req: Request, res: Response) {
     }
 }
 
+//HIỂN THỊ CHI TIẾT TIN TỨC THEO ID
+async function loadNewsId(req: Request, res: Response) {
+    const id = req.params.id
+    const news = await NewsModel.findOne({ id: id })
+    if (!news) {
+        res.status(505).json({ message: "Bài viết không tồn tại" });
+    } else {
+        // res.render('news.ejs', { news: news.content })
+        res.json(news)
+    }
+}
+
 // DANH SÁCH TẤT CẢ BÀI VIẾT
 async function loadAllNews(req: Request, res: Response) {
     const page = parseInt(req.query.page as string) || 1;
@@ -477,6 +489,7 @@ export const News = {
     updateNews,
     deleteNews,
     loadNews,
+    loadNewsId,
     loadAllNews,
     loadRandomNews,
     loadNews_Types,

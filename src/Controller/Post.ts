@@ -233,6 +233,18 @@ async function loadPost(req: Request, res: Response) {
     }
 }
 
+//CHI TIẾT BÀI VIẾT THEO ID
+async function loadPostId(req: Request, res: Response) {
+    const id = req.params.id;
+    const post = await PostModel.findOne({ id: id })
+    if (!post) {
+        res.status(505).json({ message: "Bài viết không tồn tại" });
+    } else {
+        // res.render('post', { post: post });
+        res.json(post)
+    }
+}
+
 //HIỂN THỊ TẤT CẢ BÀI VIẾT
 async function loadAllPost(req: Request, res: Response) {
     const page = parseInt(req.query.page as string) || 1;
@@ -352,6 +364,7 @@ export const Post = {
     updatePost,
     deletePost,
     loadPost,
+    loadPostId,
     loadAllPost,
     loadPost_Username,
     loadPost_Categories,
