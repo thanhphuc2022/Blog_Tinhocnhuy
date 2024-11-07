@@ -87,9 +87,7 @@ async function loadAllType_News(req: Request, res: Response) {
 
 // async function swaporder(req: Request, res: Response) {
 //     const { firstId, secondId } = req.body; // Nhận ID của hai mục cần hoán đổi
-  
 //     try {
-  
 //       // Lấy dữ liệu của hai mục
 //       const firstItem = await Types_News_Model.findOne({ id: firstId });
 //       const secondItem = await Types_News_Model.findOne({ id: secondId });

@@ -9,10 +9,9 @@ import news_Router from "./Router/news_Router";
 import types_Router from "./Router/types_news_Router";
 import categories_Router from "./Router/categories_Router";
 import tag_Router from "./Router/tag_Router";
-// import About_index_Router from "./Router/Display_Router/About_index_Router";
 import About_index_Router from "./Display/Display_Router/About_index_Router";
+import About_Images_Router from "./Display/Display_Router/About_images_Router";
 import Images_logo_Router from "./Display/Display_Router/Images_logo_Router";
-// import About_Router from "./Router/Display_Router/About_Router";
 import About_Router from "./Display/Display_Router/About_Router";
 import Content_Banner_Router from "./Display/Display_Router/Content_Banner_Router";
 import Contact_Router from "./Display/Display_Router/Contact_Router";
@@ -114,6 +113,8 @@ app.use('/api', tag_Router);
 //Display
 //about_Index
 app.use('/api', About_index_Router);
+//about_Images
+app.use('/api', About_Images_Router);
 //Image_Logo
 app.use('/api', Images_logo_Router);
 //About

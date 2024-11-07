@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
-import { v2 as cloudinary } from 'cloudinary';
-import { uploadImageToCloudinary, deleteImageFromCloudinary, convertToSlug} from "../../Services/sp"
+import { uploadImageToCloudinary, deleteImageFromCloudinary} from "../../Services/sp"
 import Images_logo_Model from "../Display_Model/Images_logo_Model";
 import { getPublicIdFromUrl } from "../../Services/sp";
 
@@ -29,7 +28,6 @@ async function createImageLogo(req: Request, res: Response) {
 async function allImagaLogo(req: Request, res: Response) {
     const allImagaAboutIndex = await Images_logo_Model.find({});
     return res.json(allImagaAboutIndex)
-
 }
 
 async function deleteImageLogo(req: Request, res: Response) {
