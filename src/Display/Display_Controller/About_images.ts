@@ -17,7 +17,7 @@ async function createAboutImages(req: Request, res: Response) {
         const public_id = getPublicIdFromUrl(link)
         //lưu vào database
         await About_images_Model.create({
-            link_Images: link,
+            link_images: link,
             public_id: public_id,
         })
         return res.json({ message: "Thêm hình ảnh thành công" })
@@ -28,7 +28,7 @@ async function deleteAboutImages(req: Request, res: Response) {
     try {
         const idImage = req.params.id;
         const images = await About_images_Model.findOne({ public_id: idImage })
-        const deleteimages = images?.link_Images
+        const deleteimages = images?.link_images
         if (deleteimages) {
             const urlObject = new URL(deleteimages);
             const path = urlObject.pathname;
