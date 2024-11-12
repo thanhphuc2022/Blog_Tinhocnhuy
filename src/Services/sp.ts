@@ -1,6 +1,4 @@
 import { v2 as cloudinary } from 'cloudinary';
-import unidecode from 'unidecode';
-import * as transliteration from 'transliteration';
 import slugify from 'slugify';
 
 //hàm tạo chuỗi ngẫu nhiên tù 1->10 kí tự
@@ -56,10 +54,10 @@ export async function uploadImageToCloudinary(image: Express.Multer.File) {
 }
 
 //HÀM LẤY PUBLIC_ID TỪ LINK HÌNH ẢNH CLOUDINARY
-export function getPublicIdFromUrl(url:string) {
+export function getPublicIdFromUrl(url: string) {
     const public_id = url.split('/').slice(-1)[0].split('.')[0];
     return public_id;
-  }
+}
 
 //HÀM XÓA HÌNH ẢNH ĐÃ UPLOAD LÊN COUDINARY
 export async function deleteImageFromCloudinary(publicId: string) {
@@ -73,41 +71,10 @@ export async function deleteImageFromCloudinary(publicId: string) {
 
 
 //HÀM CHUYỂN CHUỔI TITLE CHO BÀI VIẾT
-// lỗi y => u, bỏ
-// export function convertToSlug(title: string) {
-//     const titleNoAccent = unidecode(title);
-//     const encodedStr = titleNoAccent
-//         .toLowerCase()
-//         .replace(/[^a-z0-9 -]/g, '') // Xóa các ký tự đặc biệt, chỉ giữ lại ký tự chữ cái, số, dấu gạch ngang và khoảng trắng.
-//         .replace(/\s+/g, '-') // Thay thế khoảng trắng bằng dấu gạch ngang.
-//         .replace(/-+/g, '-') // Nếu có nhiều hơn một dấu gạch ngang liền nhau thì thay thế bằng một dấu gạch ngang duy nhất.
-//         .replace(/^-|-$/g, ''); // Nếu đoạn kết quả bắt đầu hoặc kết thúc bằng dấu gạch ngang thì loại bỏ chúng.
-//     return encodedStr;
-// }
-
-// export function convertToSlug2(title: string): string {
-//     const titleNoDiacritics = transliteration.slugify(title, { lowercase: true });
-//     const encodedStr = titleNoDiacritics
-//         .replace(/[^a-z0-9 -]/g, '')
-//         .replace(/\s+/g, '-')
-//         .replace(/-+/g, '-')
-//         .replace(/^-|-$/g, '');
-//     return encodedStr;
-// }
-
-// export function convertToSlug(title: string): string {
-//     // Sử dụng slugify với tùy chọn bỏ dấu và chuyển thành chữ thường
-//     const slug = slugify(title, {
-//         lower: true,           // Chuyển thành chữ thường
-//         remove: /[/*+~.()'"!:@]/g,  // Loại bỏ các ký tự đặc biệt không mong muốn
-//     });
-//     return slug;
-// }
-
 export function convertToSlug(title: string): string {
     // Thay thế các ký tự đặc biệt không mong muốn trước khi slugify
     const sanitizedTitle = title.replace(/\//g, '-');  // Thay thế dấu gạch chéo bằng dấu gạch ngang
-    
+
     // Sử dụng slugify với tùy chọn bỏ dấu và chuyển thành chữ thường
     const slug = slugify(sanitizedTitle, {
         lower: true,           // Chuyển thành chữ thường
