@@ -93,7 +93,7 @@ async function getSortedData(priorityId: string) {
         if (b.id === priorityId) return 1;  // Giữ nguyên thứ tự
         return 0; // Giữ nguyên thứ tự các phần tử khác
     });
-    console.log(sortedData);
+    // console.log(sortedData);
     return sortedData
 }
 
