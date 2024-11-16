@@ -13,4 +13,6 @@ types_Router.get('/loadtype', Types_News.loadTypes_News);
 
 types_Router.get('/alltype', Types_News.loadAllType_News);
 
+types_Router.get('/sort/:id', Types_News.sort);
+
 export default types_Router;

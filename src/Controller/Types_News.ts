@@ -21,7 +21,7 @@ async function createTypes_News(req: Request, res: Response) {
             id: id,
             name: name
         })
-        return res.json({ message: 'Tạo danh mục bài viết thành công', id})
+        return res.json({ message: 'Tạo danh mục bài viết thành công', id })
     } catch (error) {
         res.status(500).json(error)
     }
@@ -35,7 +35,7 @@ async function updateTypes_News(req: Request, res: Response) {
         await Types_News_Model.findOneAndUpdate({ id: id }, {
             name: name
         })
-        return res.json({ message: "Cập nhật thành công", id})
+        return res.json({ message: "Cập nhật thành công", id })
     } catch (error) {
         res.status(500).json(error)
     }
@@ -46,7 +46,7 @@ async function deleteType_News(req: Request, res: Response) {
     const id = req.params.id
     try {
         await Types_News_Model.findOneAndDelete({ id: id })
-        return res.json({ message: "Đã xóa danh mục bài viết", id})
+        return res.json({ message: "Đã xóa danh mục bài viết", id })
     } catch (error) {
         res.status(500).json(error)
     }
@@ -85,27 +85,29 @@ async function loadAllType_News(req: Request, res: Response) {
     }
 }
 
-// async function swaporder(req: Request, res: Response) {
-//     const { firstId, secondId } = req.body; // Nhận ID của hai mục cần hoán đổi
-//     try {
-//       // Lấy dữ liệu của hai mục
-//       const firstItem = await Types_News_Model.findOne({ id: firstId });
-//       const secondItem = await Types_News_Model.findOne({ id: secondId });
-  
-//       // Hoán đổi giá trị order giữa hai mục
-//       await Types_News_Model.updateOne({ id: firstId }, { $set: { order: secondItem.order } });
-//       await Types_News_Model.updateOne({ id: secondId }, { $set: { order: firstItem.order } });
-  
-//       res.json({ message: 'Order swapped successfully!' });
-//     } catch (error) {
-//       res.status(500).json({ error: 'Error swapping order' });
-//     }
-//   };
-  
+async function getSortedData(priorityId: string) {
+    const data = await Types_News_Model.find({});
+    // Sắp xếp mềm dựa trên `priorityId`
+    const sortedData = data.sort((a, b) => {
+        if (a.id === priorityId) return -1; // Đưa phần tử có `id` ưu tiên lên đầu
+        if (b.id === priorityId) return 1;  // Giữ nguyên thứ tự
+        return 0; // Giữ nguyên thứ tự các phần tử khác
+    });
+    console.log(sortedData);
+    return sortedData
+}
+
+async function sort(req: Request, res: Response) {
+    const id = req.params.id
+  const get = await getSortedData(id)
+    return res.json(get)
+}
+
 export const Types_News = {
     createTypes_News,
     updateTypes_News,
     deleteType_News,
     loadTypes_News,
-    loadAllType_News
+    loadAllType_News,
+    sort
 }
