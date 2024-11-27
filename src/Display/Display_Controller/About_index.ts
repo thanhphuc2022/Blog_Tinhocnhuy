@@ -9,6 +9,7 @@ async function createAbout_Index(req: Request, res: Response) {
         await About_Index_Model.create({
             content: content_about_index
         })
+        return res.json({ message: "Thêm thành công" })
     }
 }
 
@@ -22,6 +23,7 @@ async function updateAbout_Index(req: Request, res: Response) {
                 content: content
             })
         }
+        return res.json({ message: "Cập nhật thành công" })
     } catch (error) {
 
     }
