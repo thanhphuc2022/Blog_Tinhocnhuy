@@ -22,8 +22,8 @@ async function updateAbout_Index(req: Request, res: Response) {
             await About_Index_Model.updateOne({
                 content: content
             })
+            return res.json({ message: "Cập nhật thành công" })
         }
-        return res.json({ message: "Cập nhật thành công" })
     } catch (error) {
 
     }
