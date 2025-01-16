@@ -77,8 +77,9 @@ export function convertToSlug(title: string): string {
 
     // Sử dụng slugify với tùy chọn bỏ dấu và chuyển thành chữ thường
     const slug = slugify(sanitizedTitle, {
+        locale: 'vi', 
         lower: true,           // Chuyển thành chữ thường
-        remove: /[*+~.()'"!:@]/g,  // Loại bỏ các ký tự đặc biệt không mong muốn (loại bỏ ký tự `/` vì đã xử lý ở trên)
+        remove: /[*+~.,()'"!:@]/g,  // Loại bỏ các ký tự đặc biệt không mong muốn (loại bỏ ký tự `/` vì đã xử lý ở trên)
     });
     return slug;
 }
