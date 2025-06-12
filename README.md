@@ -41,4 +41,26 @@ Hệ thống được bảo vệ bằng xác thực JWT và phân quyền ngư�
 | **Editor** | Quản lý nội dung (tin tức, trang, hình ảnh) |
 
 ---
+Tạo file .env:
+# Cấu hình máy chủ
+SERVER_PORT=
+
+# JWT Token cho xác thực bảo mật
+JWT_SECRET_REFRESH=
+JWT_SECRET_ACCESS=
+
+# Cấu hình Cloudinary để lưu trữ hình ảnh
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_SECRET=
+CLOUDINARY_API_KEY=
+
+# Tài khoản MongoDB
+MONGO_USERNAME=
+MONGO_PASSWORD=
+
+# Thông tin email dùng để gửi liên hệ và thông báo
+emailAddress=
+emailPassword=
+
+---
 
