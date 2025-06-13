@@ -41,4 +41,38 @@ Hệ thống được bảo vệ bằng xác thực JWT và phân quyền ngư�
 | **Editor** | Quản lý nội dung (tin tức, trang, hình ảnh) |
 
 ---
+## ⚙️ Cấu hình môi trường `.env`
+
+### 🖥️ Cấu hình máy chủ
+```env
+SERVER_PORT=
+```
+
+### 🔒 JWT Token cho xác thực bảo mật
+```env
+JWT_SECRET_REFRESH=
+JWT_SECRET_ACCESS=
+```
+
+### ☁️ Cấu hình Cloudinary để lưu trữ hình ảnh
+```env
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_SECRET=
+CLOUDINARY_API_KEY=
+```
+
+### 🛢️ Tài khoản MongoDB
+```env
+MONGO_USERNAME=
+MONGO_PASSWORD=
+```
+
+### 📧 Thông tin email dùng để gửi liên hệ và thông báo
+```env
+emailAddress=
+emailPassword=
+```
+
+---
+---
 
