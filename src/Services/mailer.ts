@@ -117,8 +117,6 @@ export const contact = async function Email(req: Request, res: Response) {
   const email = req.body.email
   const subject = req.body.subject
   const text = req.body.text
-  // Generate test SMTP service account from ethereal.email
-  // Only needed if you don't have a real mail account for testing
 
   if (!process.env.EMAIL_API) {
     throw new Error("Missing EMAIL_API environment variable");
@@ -160,7 +158,6 @@ export const contact2 = async function Email2(req:Request, res:Response){
     from: `"Khách hàng (${contact}) - Tinhocnhuy.com" <sender@gmail.com>`, // sender address
     to: "tinhocnhuy@gmail.com", // list of receivers
     subject: subject, // Subject line
-    // text: "Số điện thoại Khách hàng:  "+ `${phone} - ` + "Nội dung:" + " " + text  , // plain text body
     html: `<b>${info}</b><b>Nội dung:</b><p> ${text}</p>`
   }, (err) => {
     if (err) {

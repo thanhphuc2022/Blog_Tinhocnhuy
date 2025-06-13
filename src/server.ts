@@ -43,16 +43,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-//KET NOI cloudinary/
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET
 })
-// cloudinary.uploader.upload("https://upload.wikimedia.org/wikipedia/commons/a/ae/Olympic_flag.jpg",
-//     { public_id: "olympic_flag" },
-//     function (error, result) { console.log(result); });
-
 // Sử dụng cookie-parser middleware
 
 // app.use(cookieParser());
@@ -68,29 +63,22 @@ cloudinary.config({
 // Add headers before the routes are defined
 app.use(function (req, res, next) {
 
-    // Website you wish to allow to connect
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
 
     res.setHeader('Access-Control-Allow-Origin', 'https://tinhocnhuy.com',);
 
-    // Request methods you wish to allow
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
 
-    // Request headers you wish to allow
-    // res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-    // Set to true if you need the website to include cookies in the requests sent
-    // to the API (e.g. in case you use sessions)
+
     res.setHeader('Access-Control-Allow-Credentials', "true");
 
-    // Pass to next layer of middleware
     next();
 });
 
 
 app.get('/', function (req: Request, res: Response) {
-    // uploadgg()
-    res.json("Trang này của tao")
+    res.json("Backend Tinhocnhuy.com")
 })
 
 //token

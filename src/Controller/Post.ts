@@ -8,33 +8,6 @@ import fs from "fs";
 
 //UPLOAD HÌNH ẢNH LÊN CLOUDINARY KHI CHỌN HÌNH ẢNH TẠO BÀI VIẾT
 var publicId: any;
-async function uploadImagesPost2(req: Request, res: Response) {
-    const file = req.file?.path;
-    if (!file) {
-        console.error('No file uploaded');
-        return res.status(400).json({ message: 'No file uploaded' });
-    }
-    try {
-        const result = await cloudinary.uploader.upload(file, { folder: 'Tinhocnhuy' });
-        res.json({ location: result.secure_url });
-        publicId = result.public_id
-        //link anh
-        // console.log({ location: result.secure_url})
-        //id anh, bao gom fodel/id
-        console.log({ publicId: result.public_id })
-        // Sau khi tải lên thành công và trả về link ảnh, có thể xóa tệp tin tạm trên máy chủ
-        fs.unlink(file, (err) => {
-            if (err) {
-                console.error('Error deleting uploaded file:', err);
-            } else {
-                console.log('Uploaded file deleted:', file);
-            }
-        });
-
-    } catch (err) {
-        res.status(500).json({ error: 'Upload failed:' + err });
-    }
-}
 
 export async function uploadImagesPost(req: Request, res: Response) {
     const fileBuffer = req.file?.buffer;

@@ -5,7 +5,7 @@ import slugify from 'slugify';
 function generateRandomStringPost() {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     const charactersLength = characters.length;
-    const length = Math.floor(Math.random() * 10) + 1; // Độ dài chuỗi từ 1 đến 10 (có thể điều chỉnh)
+    const length = Math.floor(Math.random() * 10) + 1; // Độ dài chuỗi từ 1 đến 10
 
     let result = '';
     for (let i = 0; i < length; i++) {
@@ -15,25 +15,6 @@ function generateRandomStringPost() {
     return result;
 }
 export const randomStringPost = generateRandomStringPost();
-
-// Hàm upload ảnh lên Cloudinary (hiện tại đang lỗi, upload vào cloud lẫn local)
-export async function uploadImageToCloudinary2(image: Express.Multer.File) {
-    try {
-        if (!image) {
-            throw new Error('No image provided.');
-        }
-        // Upload ảnh lên Cloudinary
-        const result = await cloudinary.uploader.upload(image.path, {
-            folder: 'Tinhocnhuy', // Tên thư mục chứa các thumbnail trên Cloudinary
-            allowed_formats: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
-        });
-
-        // Trả về URL của ảnh đã upload
-        return result.secure_url;
-    } catch (error) {
-        throw new Error('Failed to upload image to Cloudinary.');
-    }
-}
 
 export async function uploadImageToCloudinary(image: Express.Multer.File) {
     try {
@@ -73,13 +54,12 @@ export async function deleteImageFromCloudinary(publicId: string) {
 //HÀM CHUYỂN CHUỔI TITLE CHO BÀI VIẾT
 export function convertToSlug(title: string): string {
     // Thay thế các ký tự đặc biệt không mong muốn trước khi slugify
-    const sanitizedTitle = title.replace(/\//g, '-');  // Thay thế dấu gạch chéo bằng dấu gạch ngang
+    const sanitizedTitle = title.replace(/\//g, '-');  // Thay thế bằng dấu gạch ngang
 
-    // Sử dụng slugify với tùy chọn bỏ dấu và chuyển thành chữ thường
     const slug = slugify(sanitizedTitle, {
         locale: 'vi', 
-        lower: true,           // Chuyển thành chữ thường
-        remove: /[*+~.,()'"!:@]/g,  // Loại bỏ các ký tự đặc biệt không mong muốn (loại bỏ ký tự `/` vì đã xử lý ở trên)
+        lower: true,   // Chuyển thành chữ thường
+        remove: /[*+~.,()'"!:@]/g,  // Loại bỏ các ký tự đặc biệt không mong muốn
     });
     return slug;
 }

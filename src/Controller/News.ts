@@ -4,33 +4,9 @@ import { NewsModel } from "../Model/News_Models";
 import Types_News_Model from "../Model/Types_News_Models"
 import { uploadImageToCloudinary, deleteImageFromCloudinary, convertToSlug} from "../Services/sp"
 import { v2 as cloudinary } from 'cloudinary';
-import fs from "fs";
 
 //UPLOAD HÌNH ẢNH LÊN CLOUDINARY KHI CHỌN HÌNH ẢNH TẠO BÀI VIẾT
 var publicId: any;
-async function uploadImagesNews2(req: Request, res: Response) {
-    const file = req.file?.path;
-    if (!file) {
-        console.error('No file uploaded');
-        return res.status(400).json({ message: 'No file uploaded' });
-    }
-    try {
-        const result = await cloudinary.uploader.upload(file, { folder: 'Tinhocnhuy' });
-        res.json({ location: result.secure_url });
-        publicId = result.public_id
-        console.log({ publicId: result.public_id })
-        fs.unlink(file, (err) => {
-            if (err) {
-                console.error('Error deleting uploaded file:', err);
-            } else {
-                console.log('Uploaded file deleted:', file);
-            }
-        });
-    } catch (err) {
-        res.status(500).json({ error: 'Upload failed:' + err });
-    }
-}
-
 
 export async function uploadImagesNews(req: Request, res: Response) {
     const fileBuffer = req.file?.buffer;
@@ -337,7 +313,6 @@ async function loadNews_Types(req: Request, res: Response) {
         const totalPages = Math.ceil(totalArticles / limit);
         const currentPage = Math.min(page, totalPages);
 
-        // Nếu không có bài viết và đang ở trang cuối, trả về thông báo lỗi
         if (news.length === 0 && currentPage > 1) {
             return res.status(404).json({ message: 'Page not found' });
         }
@@ -374,7 +349,6 @@ async function LoadNews_Tag(req: Request, res: Response) {
         const totalPages = Math.ceil(totalArticles / limit);
         const currentPage = Math.min(page, totalPages);
 
-        // Nếu không có bài viết và đang ở trang cuối, trả về thông báo lỗi
         if (tag.length === 0 && currentPage > 1) {
             return res.status(404).json({ message: 'Page not found' });
         }
