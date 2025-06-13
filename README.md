@@ -22,7 +22,7 @@ Hệ thống được bảo vệ bằng xác thực JWT và phân quyền ngư�
 
 ## 🛠️ Công nghệ sử dụng
 
-- **Node.js** + **Express**
+- **Node.js** + **Express** + **TypeScript**
 - **MongoDB** + **Mongoose**
 - **TinyMCE Cloud**
 - **JWT** + **bcrypt** (xác thực người dùng)
